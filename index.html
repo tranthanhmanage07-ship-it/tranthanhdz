@@ -3,28 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đang mở Trần Thành DZ Tool...</title>
-  <meta http-equiv="refresh" content="0; url=https://tranthanhmanage07-ship-it.github.io/tranthanhdz/tranthanhdz.html">
+  <title>🚀 Trần Thành DZ Tool</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      margin-top: 80px;
-      background-color: #0f0f0f;
+      padding: 40px;
+      background: #0d1117;
       color: #fff;
     }
-    a {
-      color: #00ff9d;
-      text-decoration: none;
-      font-weight: bold;
+    h1 {
+      color: #ff4081;
     }
-    a:hover {
-      text-decoration: underline;
+    button {
+      margin: 10px;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+    .start {
+      background-color: #2ea043;
+    }
+    .open {
+      background-color: #1f6feb;
     }
   </style>
 </head>
 <body>
-  <h2>🚀 Đang mở <span style="color:#ff4081;">Trần Thành DZ Tool</span>...</h2>
-  <p>Nếu không tự động chuyển, <a href="https://tranthanhmanage07-ship-it.github.io/tranthanhdz/tranthanhdz.html">bấm vào đây</a>.</p>
+  <h1>🛠️ Trần Thành DZ Tool Bào</h1>
+  <p>Nhấn nút dưới để mở trang trung tâm hoặc 5 trang nhà cái</p>
+
+  <button class="start" onclick="window.location.href='tranthanhdz.html'">🔧 Vào Trang Trung Tâm</button>
+  <button class="open" onclick="openSites()">🌐 Mở 5 Trang Đăng Ký</button>
+
+  <script>
+    function openSites() {
+      const sites = [
+        "https://mmoo.bet/",
+        "https://789p.co/",
+        "https://go99.one/",
+        "https://tt88.win/",
+        "https://nohu.vip/"
+      ];
+      sites.forEach(url => window.open(url, '_blank'));
+    }
+  </script>
 </body>
 </html>
