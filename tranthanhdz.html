@@ -109,25 +109,23 @@
   </div>
 
   <script>
-    // 🔗 Danh sách trang cần mở
-    const sites = {
-      register: [
-        "https://m.mmoo.team/Account/Register",
-        "https://m.1tt88.vip/Account/Register",
-        "https://m.789p1.vip/Account/Register",
-        "https://m.1go99.vip/Account/Register",
-        "https://m.8nohu.vip/Account/Register"
-      ],
-      bank: [
-        "https://m.mmoo.team/Financial?type=withdraw",
-        "https://m.1tt88.vip/Financial?type=withdraw",
-        "https://m.789p1.vip/Financial?type=withdraw",
-        "https://m.1go99.vip/Financial?type=withdraw",
-        "https://m.8nohu.vip/Financial?type=withdraw"
-      ]
-    };
+    // 🔗 Link đầy đủ kèm /Account/Register và /Financial?type=withdraw
+    const registerLinks = [
+      "https://m.mmoo.team/Account/Register",
+      "https://m.1tt88.vip/Account/Register",
+      "https://m.789p1.vip/Account/Register",
+      "https://m.1go99.vip/Account/Register",
+      "https://m.8nohu.vip/Account/Register"
+    ];
 
-    // 🧩 Lưu dữ liệu vào localStorage
+    const bankLinks = [
+      "https://m.mmoo.team/Financial?type=withdraw",
+      "https://m.1tt88.vip/Financial?type=withdraw",
+      "https://m.789p1.vip/Financial?type=withdraw",
+      "https://m.1go99.vip/Financial?type=withdraw",
+      "https://m.8nohu.vip/Financial?type=withdraw"
+    ];
+
     function saveData() {
       const data = {
         username: document.getElementById("username").value.trim(),
@@ -141,7 +139,6 @@
       alert("✅ Đã lưu thông tin!");
     }
 
-    // 🗑️ Xóa dữ liệu
     function clearData() {
       if (confirm("Bạn có chắc muốn xóa toàn bộ dữ liệu đã lưu?")) {
         localStorage.removeItem("tranthanhdz_data");
@@ -150,28 +147,24 @@
       }
     }
 
-    // 🚀 Mở các trang
-    function openSites(list) {
-      list.forEach((url, i) => {
-        setTimeout(() => window.open(url, "_blank"), i * 500);
+    function openLinks(links) {
+      links.forEach((url, i) => {
+        setTimeout(() => {
+          const win = window.open(url, "_blank");
+          if (!win) alert("⚠️ Hãy cho phép trình duyệt mở cửa sổ pop-up!");
+        }, i * 500);
       });
     }
 
-    // --- Sự kiện nút ---
     document.getElementById("save").onclick = saveData;
     document.getElementById("clear").onclick = clearData;
-    document.getElementById("openRegister").onclick = () => openSites(sites.register);
-    document.getElementById("openBank").onclick = () => openSites(sites.bank);
+    document.getElementById("openRegister").onclick = () => openLinks(registerLinks);
+    document.getElementById("openBank").onclick = () => openLinks(bankLinks);
 
-    // --- Nạp lại dữ liệu đã lưu ---
+    // Nạp lại dữ liệu đã lưu
     const saved = JSON.parse(localStorage.getItem("tranthanhdz_data") || "{}");
-    if (saved.username) {
-      document.getElementById("username").value = saved.username || "";
-      document.getElementById("password").value = saved.password || "";
-      document.getElementById("withdrawPass").value = saved.withdrawPass || "";
-      document.getElementById("fullname").value = saved.fullname || "";
-      document.getElementById("branch").value = saved.branch || "";
-      document.getElementById("accountNumber").value = saved.accountNumber || "";
+    for (const key in saved) {
+      if (document.getElementById(key)) document.getElementById(key).value = saved[key];
     }
   </script>
 </body>
