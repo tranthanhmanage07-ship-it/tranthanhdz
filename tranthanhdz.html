@@ -1,238 +1,158 @@
-<!-- phần body chính bạn có rồi -->
-<!-- ... -->
-<!-- dưới cùng, thêm script này trước </body> -->
-<script>
-(function(){
-  // cấu hình: URL raw data.json (repo của bạn)
-  const RAW_DATA_URL = 'https://raw.githubusercontent.com/tranthanhmanage07-ship-it/tranthanhdz/main/data.json';
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🔧 Trần Thành Dz Tool Bảo</title>
+  <style>
+    :root{--bg:#071020;--card:#0b1220;--accent:#ff6b8a;--muted:#9aa4b2}
+    body{margin:0;background:linear-gradient(180deg,#051423 0%, #071020 100%);color:#fff;font-family:Inter,Arial,Helvetica,sans-serif}
+    .wrap{max-width:940px;margin:18px auto;padding:20px}
+    header{display:flex;align-items:center;gap:12px}
+    h1{margin:0;font-size:28px}
+    .desc{color:var(--muted);margin:8px 0 18px}
+    /* small help */
+    .help{background:rgba(255,255,255,0.03);padding:12px;border-radius:10px;color:var(--muted);margin-bottom:12px}
+    /* mobile friendly */
+    @media(max-width:480px){ .wrap{padding:12px} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>🔧 Trần Thành Dz Tool Bảo</h1>
+    </header>
+    <p class="desc">Nhập profile -> Lưu -> Xuất JSON -> Dán vào <code>data.json</code> trên repo -> Commit. Sau đó mở site bằng Tampermonkey (Kiwi) để script tự nhận profile.</p>
 
-  // DOM create: panel quản lý profile
-  function $c(tag, props) {
-    const el = document.createElement(tag);
-    if (props) Object.assign(el, props);
-    return el;
-  }
+    <div class="help">
+      <strong>Tip:</strong> Bạn có thể tạo nhiều profile. Để sử dụng trên site: Commit `data.json` rồi reload trang nhà cái.
+    </div>
+  </div>
 
-  function loadProfilesFromLS() {
-    try { return JSON.parse(localStorage.getItem('tran_profiles') || '[]'); }
-    catch(e){ return []; }
-  }
-  function saveProfilesToLS(profiles){
-    localStorage.setItem('tran_profiles', JSON.stringify(profiles||[]));
-  }
+  <!-- Panel quản lý (floating) -->
+  <script>
+  (function(){
+    // --- localStorage key
+    const KEY = 'tran_profiles';
+    function $c(t,p){ const e=document.createElement(t); if(p) Object.assign(e,p); return e; }
+    function load(){ try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+    function save(v){ localStorage.setItem(KEY, JSON.stringify(v||[])); }
 
-  function buildPanel(){
-    const wrapper = $c('div');
-    Object.assign(wrapper.style, {
-      position:'fixed', left:'12px', bottom:'18px', zIndex:99999,
-      width:'320px', maxWidth:'92vw', background:'#0b1220', color:'#fff', padding:'12px',
-      borderRadius:'12px', boxShadow:'0 6px 18px rgba(0,0,0,0.5)', fontFamily:'Inter,Arial'
+    // build UI
+    const panel = $c('div');
+    Object.assign(panel.style,{
+      position:'fixed',right:'12px',bottom:'12px',zIndex:99999,
+      width:'360px',maxWidth:'94vw',background:'var(--card)',padding:'12px',borderRadius:'12px',color:'#fff',
+      boxShadow:'0 8px 28px rgba(0,0,0,0.6)',fontSize:'14px'
     });
+    panel.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <strong>⚙️ Profiles</strong>
+        <small style="opacity:.8">v1.0</small>
+      </div>
+      <div style="margin-top:8px">
+        <input id="p_name" placeholder="Tên profile" style="width:100%;padding:8px;border-radius:8px;border:none;margin-bottom:6px;background:#071820;color:#fff">
+        <div style="display:flex;gap:6px">
+          <input id="p_user" placeholder="Tên tài khoản" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
+          <input id="p_pass" placeholder="Mật khẩu" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
+        </div>
+        <input id="p_withdraw" placeholder="Mật khẩu rút tiền" style="width:100%;padding:8px;border-radius:8px;border:none;margin-top:6px;background:#071820;color:#fff">
+        <input id="p_fullname" placeholder="Họ và tên (IN HOA)" style="width:100%;padding:8px;border-radius:8px;border:none;margin-top:6px;background:#071820;color:#fff">
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <input id="p_account" placeholder="Số tài khoản" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
+          <input id="p_branch" placeholder="Chi nhánh / Thành phố" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="btnSave" style="flex:1;padding:8px;border-radius:8px;border:none;background:#ff6b8a;color:#000">Lưu profile</button>
+          <button id="btnAdd" style="flex:1;padding:8px;border-radius:8px;border:none;background:#06d6a0;color:#000">Thêm mới</button>
+        </div>
+      </div>
 
-    wrapper.innerHTML = `<h4 style="margin:0 0 8px 0">⚒️ Trần Thành DZ - Profiles</h4>`;
+      <div id="list" style="margin-top:10px;max-height:180px;overflow:auto"></div>
 
-    // form create/edit
-    const f = $c('div');
-    f.innerHTML = `
-      <input id="p_name" placeholder="Tên profile" style="width:100%;padding:8px;border-radius:6px;border:none;margin-bottom:6px">
-      <div style="display:flex;gap:6px">
-        <input id="p_user" placeholder="Tên tài khoản" style="flex:1;padding:8px;border-radius:6px;border:none">
-        <input id="p_pass" placeholder="Mật khẩu" style="flex:1;padding:8px;border-radius:6px;border:none">
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="exportJSON" style="flex:1;padding:8px;border-radius:8px;border:none;background:#3b82f6;color:#fff">Xuất JSON</button>
+        <button id="copyJSON" style="flex:1;padding:8px;border-radius:8px;border:none;background:#f59e0b;color:#000">Sao chép</button>
       </div>
-      <input id="p_withdraw" placeholder="Mật khẩu rút tiền" style="width:100%;padding:8px;border-radius:6px;border:none;margin-top:6px">
-      <input id="p_fullname" placeholder="Họ và tên (IN HOA)" style="width:100%;padding:8px;border-radius:6px;border:none;margin-top:6px">
-      <div style="display:flex;gap:6px;margin-top:6px">
-        <input id="p_account" placeholder="Số tài khoản" style="flex:1;padding:8px;border-radius:6px;border:none">
-        <input id="p_branch" placeholder="Chi nhánh / Thành phố" style="flex:1;padding:8px;border-radius:6px;border:none">
+
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="openRegs" style="flex:1;padding:8px;border-radius:8px;border:none;background:#10b981;color:#000">Mở 5 trang đăng ký</button>
+        <button id="openBanks" style="flex:1;padding:8px;border-radius:8px;border:none;background:#3b82f6;color:#fff">Mở trang liên kết ngân hàng</button>
       </div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <button id="saveProfile" style="flex:1;padding:8px;border-radius:6px;background:#ef476f;border:none;color:#fff">Lưu profile</button>
-        <button id="addProfile" style="flex:1;padding:8px;border-radius:6px;background:#06d6a0;border:none;color:#000">Thêm mới</button>
+
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <input id="delay" type="number" value="800" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
+        <select id="selProfile" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff"></select>
       </div>
+
+      <small style="display:block;margin-top:8px;opacity:.8">Sau khi sửa: dùng "Xuất JSON" hoặc "Sao chép" -> vào repo -> mở data.json -> dán -> Commit.</small>
     `;
-    wrapper.appendChild(f);
 
-    // danh sách profile
-    const list = $c('div'); list.style.marginTop='8px'; wrapper.appendChild(list);
+    document.body.appendChild(panel);
 
-    // export / copy / upload note
-    const tools = $c('div'); tools.style.marginTop='8px';
-    tools.innerHTML = `
-      <div style="display:flex;gap:6px">
-        <button id="exportJSON" style="flex:1;padding:8px;border-radius:6px;background:#3b82f6;border:none;color:#fff">Xuất JSON</button>
-        <button id="copyJSON" style="flex:1;padding:8px;border-radius:6px;background:#f59e0b;border:none;color:#000">Sao chép</button>
-      </div>
-      <small style="display:block;margin-top:6px;opacity:.9">Sau khi sửa: vào repo -> edit data.json -> dán JSON vào -> Commit (cập nhật để Tampermonkey lấy)</small>
-    `;
-    wrapper.appendChild(tools);
-
-    // open sites controls
-    const opens = $c('div'); opens.style.marginTop='8px';
-    opens.innerHTML = `
-      <div style="display:flex;gap:6px">
-        <button id="openRegs" style="flex:1;padding:8px;border-radius:6px;background:#10b981;border:none;color:#fff">Mở 5 trang đăng ký</button>
-        <button id="openBanks" style="flex:1;padding:8px;border-radius:6px;background:#3b82f6;border:none;color:#fff">Mở bank liên kết</button>
-      </div>
-      <div style="margin-top:6px;display:flex;gap:6px">
-        <input id="openDelay" type="number" value="800" style="flex:1;padding:8px;border-radius:6px;border:none" />
-        <select id="selProfile" style="flex:1;padding:8px;border-radius:6px;border:none"></select>
-      </div>
-    `;
-    wrapper.appendChild(opens);
-
-    document.body.appendChild(wrapper);
-
-    // functions fill list & select
-    function refreshList(){
-      const profiles = loadProfilesFromLS();
-      list.innerHTML = '';
-      const sel = document.getElementById('selProfile');
+    // helpers
+    function renderList(){
+      const arr = load();
+      const list = panel.querySelector('#list');
+      const sel = panel.querySelector('#selProfile');
       sel.innerHTML = '';
-      profiles.forEach((p, idx)=> {
-        const row = document.createElement('div');
-        row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center';
-        row.style.padding='6px 0'; row.style.borderBottom='1px solid rgba(255,255,255,0.05)';
-        row.innerHTML = `<div style="flex:1"><b>${p.name}</b><br><small style="opacity:.8">${p.user} · ${p.account || ''}</small></div>`;
+      list.innerHTML = '';
+      if(arr.length===0){ list.innerHTML = '<div style="opacity:.8">Chưa có profile</div>'; return; }
+      arr.forEach((p, i)=>{
+        const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.padding='6px 0'; row.style.borderBottom='1px solid rgba(255,255,255,0.03)';
+        row.innerHTML = `<div><b>${p.name}</b><div style="opacity:.7;font-size:12px">${p.user || ''} · ${p.account || ''}</div></div>`;
         const btns = document.createElement('div');
-        btns.style.display='flex'; btns.style.gap='6px';
-        const use = $c('button', { innerText:'Set', onclick:()=> { selectProfile(idx); } });
-        const del = $c('button', { innerText:'X', onclick:()=> { if(confirm('Xóa profile?')) { profiles.splice(idx,1); saveProfilesToLS(profiles); refreshList(); } } });
-        Object.assign(use.style, { padding:'6px', borderRadius:'6px', border:'none', background:'#06b6d4', color:'#000'});
-        Object.assign(del.style, { padding:'6px', borderRadius:'6px', border:'none', background:'#ef4444', color:'#fff' });
-        btns.appendChild(use); btns.appendChild(del);
-        row.appendChild(btns);
+        const set = document.createElement('button'); set.textContent='Set'; set.style.marginRight='6px';
+        const del = document.createElement('button'); del.textContent='X';
+        Object.assign(set.style,{padding:'6px',borderRadius:'6px',border:'none',background:'#06b6d4',color:'#000'});
+        Object.assign(del.style,{padding:'6px',borderRadius:'6px',border:'none',background:'#ef4444',color:'#fff'});
+        set.onclick=()=> loadToForm(i);
+        del.onclick=()=> { if(confirm('Xóa profile này?')) { arr.splice(i,1); save(arr); renderList(); } };
+        btns.appendChild(set); btns.appendChild(del); row.appendChild(btns);
         list.appendChild(row);
 
-        // add to select
-        const opt = document.createElement('option'); opt.value = p.name; opt.innerText = p.name; sel.appendChild(opt);
+        const opt = document.createElement('option'); opt.value = p.name; opt.textContent = p.name; sel.appendChild(opt);
       });
-      if(profiles.length===0){
-        list.innerHTML='<small style="opacity:.8">Chưa có profile nào.</small>';
-      }
+    }
+    function loadToForm(i){
+      const arr = load();
+      const p = arr[i];
+      if(!p) return;
+      panel.querySelector('#p_name').value = p.name || '';
+      panel.querySelector('#p_user').value = p.user || '';
+      panel.querySelector('#p_pass').value = p.pass || '';
+      panel.querySelector('#p_withdraw').value = p.withdraw || '';
+      panel.querySelector('#p_fullname').value = p.fullname || '';
+      panel.querySelector('#p_account').value = p.account || '';
+      panel.querySelector('#p_branch').value = p.branch || '';
     }
 
-    function selectProfile(i){
-      const profiles = loadProfilesFromLS();
-      const p = profiles[i];
-      if(!p) return alert('Profile không tồn tại');
-      // set form inputs
-      document.getElementById('p_name').value = p.name||'';
-      document.getElementById('p_user').value = p.user||'';
-      document.getElementById('p_pass').value = p.pass||'';
-      document.getElementById('p_withdraw').value = p.withdraw||'';
-      document.getElementById('p_fullname').value = p.fullname||'';
-      document.getElementById('p_account').value = p.account||'';
-      document.getElementById('p_branch').value = p.branch||'';
-    }
-
-    // buttons handlers
-    document.getElementById('addProfile').onclick = ()=>{
-      // add from form
-      const profiles = loadProfilesFromLS();
+    // events
+    panel.querySelector('#btnAdd').onclick = ()=>{
+      const arr = load();
       const p = {
-        name: document.getElementById('p_name').value.trim() || ('profile'+(profiles.length+1)),
-        user: document.getElementById('p_user').value.trim(),
-        pass: document.getElementById('p_pass').value.trim(),
-        withdraw: document.getElementById('p_withdraw').value.trim(),
-        fullname: document.getElementById('p_fullname').value.trim(),
-        account: document.getElementById('p_account').value.trim(),
-        branch: document.getElementById('p_branch').value.trim()
+        name: panel.querySelector('#p_name').value.trim() || ('profile'+(arr.length+1)),
+        user: panel.querySelector('#p_user').value.trim(),
+        pass: panel.querySelector('#p_pass').value.trim(),
+        withdraw: panel.querySelector('#p_withdraw').value.trim(),
+        fullname: panel.querySelector('#p_fullname').value.trim(),
+        account: panel.querySelector('#p_account').value.trim(),
+        branch: panel.querySelector('#p_branch').value.trim()
       };
-      profiles.push(p);
-      saveProfilesToLS(profiles);
-      refreshList();
-      alert('Đã thêm profile');
+      arr.push(p); save(arr); renderList(); alert('Đã thêm profile');
     };
 
-    document.getElementById('saveProfile').onclick = ()=>{
-      const profiles = loadProfilesFromLS();
-      const name = document.getElementById('p_name').value.trim();
-      if(!name) return alert('Nhập tên profile');
-      // find existing by name
-      let idx = profiles.findIndex(x=>x.name===name);
+    panel.querySelector('#btnSave').onclick = ()=>{
+      const arr = load();
+      const name = panel.querySelector('#p_name').value.trim();
+      if(!name) return alert('Nhập tên profile để lưu');
       const p = {
         name: name,
-        user: document.getElementById('p_user').value.trim(),
-        pass: document.getElementById('p_pass').value.trim(),
-        withdraw: document.getElementById('p_withdraw').value.trim(),
-        fullname: document.getElementById('p_fullname').value.trim(),
-        account: document.getElementById('p_account').value.trim(),
-        branch: document.getElementById('p_branch').value.trim()
+        user: panel.querySelector('#p_user').value.trim(),
+        pass: panel.querySelector('#p_pass').value.trim(),
+        withdraw: panel.querySelector('#p_withdraw').value.trim(),
+        fullname: panel.querySelector('#p_fullname').value.trim(),
+        account: panel.querySelector('#p_account').value.trim(),
+        branch: panel.querySelector('#p_branch').value.trim()
       };
-      if(idx>=0) profiles[idx] = p;
-      else profiles.push(p);
-      saveProfilesToLS(profiles);
-      refreshList();
-      alert('Đã lưu profile');
-    };
-
-    document.getElementById('exportJSON').onclick = ()=>{
-      const profiles = loadProfilesFromLS();
-      // export format data.json: { active: "name", profiles: [...] , sites: [...] }
-      const payload = {
-        active: (profiles[0] && profiles[0].name) || '',
-        profiles: profiles,
-        sites: [
-          { name: "MMOO", reg: "https://m.mmoo.team/", bank: "https://m.mmoo.team/Financial?type=" },
-          { name: "TT88", reg: "https://m.1tt88.vip/", bank: "https://m.1tt88.vip/Financial" },
-          { name: "789P", reg: "https://m.789p1.vip/", bank: "https://m.789p1.vip/Financial" },
-          { name: "GO99", reg: "https://m.1go99.vip/", bank: "https://m.1go99.vip/Financial" },
-          { name: "NOHU", reg: "https://m.8nohu.vip/", bank: "https://m.8nohu.vip/Financial" }
-        ]
-      };
-      const json = JSON.stringify(payload, null, 2);
-      // show in prompt for copy
-      const w = window.open('', '_blank', 'width=600,height=600');
-      w.document.write('<pre style="white-space:pre-wrap;">'+json.replace(/</g,'&lt;')+'</pre>');
-      alert('Mở cửa sổ chứa JSON — copy nội dung và dán vào data.json trên repo của bạn (GitHub).');
-    };
-
-    document.getElementById('copyJSON').onclick = ()=>{
-      const profiles = loadProfilesFromLS();
-      const payload = { active: (profiles[0] && profiles[0].name) || '', profiles: profiles };
-      const json = JSON.stringify(payload, null, 2);
-      navigator.clipboard?.writeText(json).then(()=> alert('Đã copy JSON vào clipboard. Dán vào data.json trên repo.'), ()=> alert('Copy thất bại — dùng Xuất JSON'));
-    };
-
-    document.getElementById('openRegs').onclick = ()=>{
-      const delay = parseInt(document.getElementById('openDelay').value) || 800;
-      const sites = [
-        'https://m.mmoo.team/',
-        'https://m.1tt88.vip/',
-        'https://m.789p1.vip/',
-        'https://m.1go99.vip/',
-        'https://m.8nohu.vip/'
-      ];
-      let i=0;
-      const t=setInterval(()=> {
-        if (i>=sites.length) { clearInterval(t); return; }
-        window.open(sites[i], '_blank');
-        i++;
-      }, delay);
-    };
-
-    document.getElementById('openBanks').onclick = ()=>{
-      const delay = parseInt(document.getElementById('openDelay').value) || 800;
-      const sites = [
-        'https://m.mmoo.team/Financial?type=',
-        'https://m.1tt88.vip/Financial',
-        'https://m.789p1.vip/Financial',
-        'https://m.1go99.vip/Financial',
-        'https://m.8nohu.vip/Financial'
-      ];
-      let i=0;
-      const t=setInterval(()=> {
-        if (i>=sites.length) { clearInterval(t); return; }
-        window.open(sites[i], '_blank');
-        i++;
-      }, delay);
-    };
-
-    refreshList();
-  }
-
-  if (document.readyState === 'complete' || document.readyState === 'interactive') buildPanel();
-  else document.addEventListener('DOMContentLoaded', buildPanel);
-
-})();
-  </script>
+      const idx = arr.findIndex(x=>x.name===name);
