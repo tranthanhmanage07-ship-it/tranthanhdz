@@ -1,118 +1,64 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trần Thành DZ Tool Báo</title>
-  <style>
-    body {
-      background: #0f172a;
-      color: #f8fafc;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 30px;
-    }
-    h1 {
-      color: #38bdf8;
-    }
-    input, button {
-      margin: 8px;
-      padding: 10px;
-      width: 260px;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-    }
-    input {
-      background: #1e293b;
-      color: #f1f5f9;
-    }
-    button {
-      background: #3b82f6;
-      color: #fff;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    button:hover {
-      background: #2563eb;
-    }
-    .section {
-      margin-top: 25px;
-    }
-  </style>
-</head>
-<body>
-  <h1>⚙️ Trần Thành DZ Tool Báo</h1>
-  <p>Nhập thông tin 1 lần — tool sẽ tự động điền vào 5 trang đăng ký hoặc 5 trang liên kết ngân hàng.</p>
+<script>
+const sites = [
+  "https://m.8nohu.vip/Account/Register",
+  "https://m.1go99.vip/Account/Register",
+  "https://m.mmoo.team/Account/Register",
+  "https://m.789p1.vip/Account/Register",
+  "https://m.1tt88.vip/Account/Register"
+];
 
-  <div class="section">
-    <input id="username" placeholder="Tên tài khoản"><br>
-    <input id="password" type="password" placeholder="Mật khẩu thành viên"><br>
-    <input id="withdrawPass" type="password" placeholder="Mật khẩu rút tiền"><br>
-    <input id="fullname" placeholder="Họ và tên thật"><br>
-    <input id="branch" placeholder="Chi nhánh ngân hàng"><br>
-    <input id="accountNumber" placeholder="Số tài khoản ngân hàng"><br>
-  </div>
+// 🔹 Lưu dữ liệu người dùng
+function saveData() {
+  const data = {
+    username: document.getElementById("username").value.trim(),
+    password: document.getElementById("password").value.trim(),
+    confirmPassword: document.getElementById("confirmPassword").value.trim(),
+    withdrawPass: document.getElementById("withdrawPass").value.trim(),
+    fullname: document.getElementById("fullname").value.trim(),
+    bankNumber: document.getElementById("bankNumber").value.trim(),
+  };
+  localStorage.setItem("userData", JSON.stringify(data));
+  alert("✅ Đã lưu thông tin!");
+}
 
-  <div class="section">
-    <button id="save">💾 Lưu thông tin</button>
-    <button id="openReg">🚀 Mở 5 trang đăng ký</button>
-    <button id="openBank">🏦 Mở 5 trang ngân hàng</button>
-    <button id="clear">🗑 Xóa dữ liệu</button>
-  </div>
+// 🔹 Mở 5 trang đăng ký và điền tự động
+function openAndFill() {
+  const data = JSON.parse(localStorage.getItem("userData"));
+  if (!data) return alert("⚠️ Chưa có dữ liệu, hãy lưu trước!");
 
-  <script>
-    // --- Tải dữ liệu cũ ---
-    window.onload = () => {
-      const data = JSON.parse(localStorage.getItem("tranthanhdz_data") || "{}");
-      for (let key in data) {
-        if (document.getElementById(key)) document.getElementById(key).value = data[key];
+  sites.forEach(url => {
+    const tab = window.open(url, "_blank");
+
+    const script = `
+      (function fillForm() {
+        const fill = () => {
+          const inputs = document.querySelectorAll("input, select");
+          let filled = 0;
+
+          inputs.forEach(input => {
+            const name = input.getAttribute("formcontrolname") || input.name || "";
+            if (/account/i.test(name)) { input.value = "${data.username}"; filled++; }
+            if (/password/i.test(name) && !/withdraw/i.test(name)) { input.value = "${data.password}"; filled++; }
+            if (/withdraw/i.test(name)) { input.value = "${data.withdrawPass}"; filled++; }
+            if (/fullname|realname|name/i.test(name)) { input.value = "${data.fullname}"; filled++; }
+            if (/confirm/i.test(name)) { input.value = "${data.confirmPassword}"; filled++; }
+            if (/bank/i.test(name) || /accountno/i.test(name)) { input.value = "${data.bankNumber}"; filled++; }
+          });
+
+          if (filled > 0) console.log("✅ Auto-fill done on", location.href);
+          else setTimeout(fill, 1000);
+        };
+        fill();
+      })();
+    `;
+
+    // Đợi tab load xong mới inject script
+    const timer = setInterval(() => {
+      if (tab.document && tab.document.readyState === "complete") {
+        tab.eval(script);
+        clearInterval(timer);
       }
-    };
-
-    // --- Lưu thông tin ---
-    document.getElementById("save").onclick = () => {
-      const data = {
-        username: username.value.trim(),
-        password: password.value.trim(),
-        withdrawPass: withdrawPass.value.trim(),
-        fullname: fullname.value.trim(),
-        branch: branch.value.trim(),
-        accountNumber: accountNumber.value.trim(),
-      };
-      localStorage.setItem("tranthanhdz_data", JSON.stringify(data));
-      alert("✅ Đã lưu thông tin vào trình duyệt!");
-    };
-
-    // --- Xóa dữ liệu ---
-    document.getElementById("clear").onclick = () => {
-      localStorage.removeItem("tranthanhdz_data");
-      alert("🗑 Đã xóa dữ liệu!");
-    };
-
-    // --- Link danh sách ---
-    const registerLinks = [
-      "https://m.8nohu.vip/Account/Register",
-      "https://m.1go99.vip/Account/Register",
-      "https://m.mmoo.team/Account/Register",
-      "https://m.789p1.vip/Account/Register",
-      "https://m.1tt88.vip/Account/Register"
-    ];
-    const bankLinks = registerLinks.map(l => l.replace("/Account/Register", "/Financial?type"));
-
-    // --- Mở 5 trang đăng ký ---
-    document.getElementById("openReg").onclick = () => {
-      const data = localStorage.getItem("tranthanhdz_data");
-      if (!data) return alert("⚠️ Chưa có dữ liệu! Vui lòng bấm Lưu thông tin trước.");
-      registerLinks.forEach(link => window.open(link, "_blank"));
-    };
-
-    // --- Mở 5 trang ngân hàng ---
-    document.getElementById("openBank").onclick = () => {
-      const data = localStorage.getItem("tranthanhdz_data");
-      if (!data) return alert("⚠️ Chưa có dữ liệu! Vui lòng bấm Lưu thông tin trước.");
-      bankLinks.forEach(link => window.open(link, "_blank"));
-    };
-  </script>
-</body>
-</html>
+    }, 1500);
+  });
+}
+</script>
