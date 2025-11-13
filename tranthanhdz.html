@@ -43,7 +43,7 @@
 </head>
 <body>
   <h1>⚙️ Trần Thành DZ Tool Báo</h1>
-  <p>Nhập thông tin 1 lần — hệ thống sẽ tự động điền vào 5 trang đăng ký và 5 trang liên kết ngân hàng.</p>
+  <p>Nhập thông tin 1 lần — tool sẽ tự động điền vào 5 trang đăng ký hoặc 5 trang liên kết ngân hàng.</p>
 
   <div class="section">
     <input id="username" placeholder="Tên tài khoản"><br>
@@ -56,33 +56,29 @@
 
   <div class="section">
     <button id="save">💾 Lưu thông tin</button>
-    <button id="start">🚀 Bắt đầu chạy tool</button>
+    <button id="openReg">🚀 Mở 5 trang đăng ký</button>
+    <button id="openBank">🏦 Mở 5 trang ngân hàng</button>
     <button id="clear">🗑 Xóa dữ liệu</button>
   </div>
 
   <script>
-    // --- Khi load, nếu có dữ liệu thì tự hiện lại ---
+    // --- Tải dữ liệu cũ ---
     window.onload = () => {
       const data = JSON.parse(localStorage.getItem("tranthanhdz_data") || "{}");
-      if (data.username) {
-        document.getElementById("username").value = data.username || "";
-        document.getElementById("password").value = data.password || "";
-        document.getElementById("withdrawPass").value = data.withdrawPass || "";
-        document.getElementById("fullname").value = data.fullname || "";
-        document.getElementById("branch").value = data.branch || "";
-        document.getElementById("accountNumber").value = data.accountNumber || "";
+      for (let key in data) {
+        if (document.getElementById(key)) document.getElementById(key).value = data[key];
       }
     };
 
     // --- Lưu thông tin ---
     document.getElementById("save").onclick = () => {
       const data = {
-        username: document.getElementById("username").value.trim(),
-        password: document.getElementById("password").value.trim(),
-        withdrawPass: document.getElementById("withdrawPass").value.trim(),
-        fullname: document.getElementById("fullname").value.trim(),
-        branch: document.getElementById("branch").value.trim(),
-        accountNumber: document.getElementById("accountNumber").value.trim()
+        username: username.value.trim(),
+        password: password.value.trim(),
+        withdrawPass: withdrawPass.value.trim(),
+        fullname: fullname.value.trim(),
+        branch: branch.value.trim(),
+        accountNumber: accountNumber.value.trim(),
       };
       localStorage.setItem("tranthanhdz_data", JSON.stringify(data));
       alert("✅ Đã lưu thông tin vào trình duyệt!");
@@ -94,18 +90,28 @@
       alert("🗑 Đã xóa dữ liệu!");
     };
 
-    // --- Mở 10 trang (5 đăng ký + 5 liên kết ngân hàng) ---
-    document.getElementById("start").onclick = () => {
-      const registerLinks = [
-        "https://m.8nohu.vip/Account/Register",
-        "https://m.1go99.vip/Account/Register",
-        "https://m.mmoo.team/Account/Register",
-        "https://m.789p1.vip/Account/Register",
-        "https://m.1tt88.vip/Account/Register"
-      ];
-      const bankLinks = registerLinks.map(link => link.replace("/Account/Register", "/Financial?type"));
-      const allLinks = [...registerLinks, ...bankLinks];
-      allLinks.forEach(link => window.open(link, "_blank"));
+    // --- Link danh sách ---
+    const registerLinks = [
+      "https://m.8nohu.vip/Account/Register",
+      "https://m.1go99.vip/Account/Register",
+      "https://m.mmoo.team/Account/Register",
+      "https://m.789p1.vip/Account/Register",
+      "https://m.1tt88.vip/Account/Register"
+    ];
+    const bankLinks = registerLinks.map(l => l.replace("/Account/Register", "/Financial?type"));
+
+    // --- Mở 5 trang đăng ký ---
+    document.getElementById("openReg").onclick = () => {
+      const data = localStorage.getItem("tranthanhdz_data");
+      if (!data) return alert("⚠️ Chưa có dữ liệu! Vui lòng bấm Lưu thông tin trước.");
+      registerLinks.forEach(link => window.open(link, "_blank"));
+    };
+
+    // --- Mở 5 trang ngân hàng ---
+    document.getElementById("openBank").onclick = () => {
+      const data = localStorage.getItem("tranthanhdz_data");
+      if (!data) return alert("⚠️ Chưa có dữ liệu! Vui lòng bấm Lưu thông tin trước.");
+      bankLinks.forEach(link => window.open(link, "_blank"));
     };
   </script>
 </body>
