@@ -1,161 +1,64 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trần Thành DZ Tool</title>
   <style>
-    :root{--bg:#071020;--card:#0b1220;--accent:#ff6b8a;--muted:#9aa4b2}
-    body{margin:0;background:linear-gradient(180deg,#051423 0%, #071020 100%);color:#fff;font-family:Arial,Helvetica,sans-serif}
-    .wrap{max-width:760px;margin:24px auto;padding:18px}
-    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,0.6)}
-    h1{margin:0 0 8px 0;color:#58a6ff}
-    label{display:block;margin-top:10px;color:#cbd5e1;font-size:14px}
-    input,select{width:100%;padding:10px;border-radius:8px;border:none;background:#0f1724;color:#fff;margin-top:6px;box-sizing:border-box}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .btn{display:inline-block;padding:10px 14px;border-radius:8px;border:none;background:var(--accent);color:#000;font-weight:700;cursor:pointer}
-    .btn.secondary{background:#10b981;color:#000}
-    .btn.danger{background:#ef4444;color:#fff}
-    .btn.full{width:100%}
-    .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-    .small{font-size:13px;color:var(--muted);margin-top:10px}
-    footer{margin-top:14px;text-align:center;color:#94a3b8;font-size:13px}
-    @media(max-width:640px){ .row{grid-template-columns:1fr} }
+    body { background:#000; color:#fff; font-family:Arial; text-align:center; padding:20px; }
+    input { display:block; margin:10px auto; padding:8px; border-radius:6px; width:260px; border:none; }
+    button { background:#ff4081; color:#fff; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; margin:10px; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>⚡ Trần Thành DZ Tool (tranthanhdz)</h1>
-      <p class="small">Nhập thông tin 1 lần → Lưu → Mở 5 trang đăng ký → Tampermonkey sẽ lấy dữ liệu và điền trên từng site.</p>
+  <h2>🔥 Trần Thành DZ Tool - Trung tâm</h2>
 
-      <label>Tên tài khoản</label>
-      <input id="username" placeholder="ví dụ: tranthanh207">
+  <input id="username" placeholder="Tên tài khoản">
+  <input id="password" placeholder="Mật khẩu thành viên" type="password">
+  <input id="confirm" placeholder="Xác nhận mật khẩu" type="password">
+  <input id="withdrawPass" placeholder="Mật khẩu rút tiền" type="password">
+  <input id="fullname" placeholder="Họ và tên thật">
+  <input id="accountNumber" placeholder="Số tài khoản ngân hàng">
+  <input id="branch" placeholder="Chi nhánh / Thành phố">
 
-      <label>Mật khẩu thành viên</label>
-      <input id="password" type="password" placeholder="ví dụ: thanh132">
+  <button id="saveBtn">💾 Lưu thông tin</button>
+  <button id="openSites">🌐 Mở 5 trang đăng ký</button>
+  <button id="openBanks">🏦 Mở trang liên kết ngân hàng</button>
 
-      <label>Xác nhận mật khẩu</label>
-      <input id="confirmPassword" type="password" placeholder="ghi giống mật khẩu thành viên">
+  <script>
+    const sites = [
+      "https://m.8nohu.vip/Account/Register",
+      "https://m.1go99.vip/Account/Register",
+      "https://m.mmoo.team/Account/Register",
+      "https://m.789p1.vip/Account/Register",
+      "https://m.1tt88.vip/Account/Register"
+    ];
 
-      <label>Mật khẩu rút tiền</label>
-      <input id="withdrawPass" type="password" placeholder="ví dụ: 2007">
+    const banks = [
+      "https://m.8nohu.vip/Financial?type",
+      "https://m.1go99.vip/Financial?type",
+      "https://m.mmoo.team/Financial?type",
+      "https://m.789p1.vip/Financial?type",
+      "https://m.1tt88.vip/Financial?type"
+    ];
 
-      <label>Họ và tên thật (IN HOA)</label>
-      <input id="fullname" placeholder="ví dụ: HOANG TRAN THANH">
-
-      <div class="row">
-        <div>
-          <label>Số tài khoản</label>
-          <input id="accountNumber" placeholder="ví dụ: 9704361234567890">
-        </div>
-        <div>
-          <label>Chi nhánh / Thành phố</label>
-          <input id="branch" placeholder="ví dụ: TP Hồ Chí Minh">
-        </div>
-      </div>
-
-      <div class="controls">
-        <button id="save" class="btn full">💾 Lưu thông tin</button>
-        <button id="clear" class="btn danger full">🗑 Xóa dữ liệu</button>
-      </div>
-
-      <div style="height:10px"></div>
-
-      <div class="controls">
-        <button id="openRegisters" class="btn secondary full">🧾 Mở 5 trang đăng ký</button>
-        <button id="openBanks" class="btn full">🏦 Mở 5 trang liên kết ngân hàng</button>
-      </div>
-
-      <p class="small">Lưu ý: bật popups cho trang nếu bị chặn. Sau khi mở trang đăng ký, trên trang nhà cái bạn bấm nút <strong>⚡ Tự động điền</strong> (do Tampermonkey chèn) để fill.</p>
-    </div>
-
-    <footer>© Trần Thành DZ • Tool tự động điền</footer>
-  </div>
-
-<script>
-  // === DANH SÁCH LINK (theo yêu cầu bạn) ===
-  const REGISTER_LINKS = [
-    "https://m.8nohu.vip/Account/Register",
-    "https://m.1go99.vip/Account/Register",
-    "https://m.mmoo.team/Account/Register",
-    "https://m.789p1.vip/Account/Register",
-    "https://m.1tt88.vip/Account/Register"
-  ];
-
-  // bank links built from register links by replacing trailing "/Account/Register" with "/Financial?type"
-  const BANK_LINKS = REGISTER_LINKS.map(u => {
-    try {
-      return u.replace(/\/Account\/Register(\/)?$/i, '/Financial?type');
-    } catch(e) { return u; }
-  });
-
-  // helper open sequential with delay (and popup check)
-  function openSequential(urls, delay = 600) {
-    let i = 0;
-    const t = setInterval(()=>{
-      if (i >= urls.length) { clearInterval(t); return; }
-      const w = window.open(urls[i], '_blank');
-      if (!w) {
-        alert('⚠️ Trình duyệt có chặn popup. Cho phép popup cho trang này rồi thử lại.');
-        clearInterval(t);
-        return;
-      }
-      i++;
-    }, delay);
-  }
-
-  // save/clear handlers
-  document.getElementById('save').onclick = () => {
-    const payload = {
-      username: document.getElementById('username').value.trim(),
-      password: document.getElementById('password').value.trim(),
-      confirmPassword: document.getElementById('confirmPassword').value.trim(),
-      withdrawPass: document.getElementById('withdrawPass').value.trim(),
-      fullname: document.getElementById('fullname').value.trim(),
-      accountNumber: document.getElementById('accountNumber').value.trim(),
-      branch: document.getElementById('branch').value.trim()
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.onclick = () => {
+      const data = {
+        username: username.value,
+        password: password.value,
+        withdrawPass: withdrawPass.value,
+        fullname: fullname.value,
+        accountNumber: accountNumber.value,
+        branch: branch.value
+      };
+      localStorage.setItem("tranthanhdz_data", JSON.stringify(data));
+      window.postMessage({ type: "SAVE_TRAN_THANH_DATA", payload: data }, "*");
+      alert("✅ Đã lưu & gửi dữ liệu sang Tampermonkey!");
     };
-    localStorage.setItem('tranthanhdz_data', JSON.stringify(payload));
-    alert('✅ Đã lưu dữ liệu vào trình duyệt (localStorage).');
-  };
 
-  document.getElementById('clear').onclick = () => {
-    if (!confirm('Bạn chắc chắn muốn xóa dữ liệu đã lưu?')) return;
-    localStorage.removeItem('tranthanhdz_data');
-    document.querySelectorAll('input').forEach(i => i.value = '');
-    alert('🗑️ Đã xóa.');
-  };
-
-  // open register links
-  document.getElementById('openRegisters').onclick = () => {
-    const data = localStorage.getItem('tranthanhdz_data');
-    if (!data) return alert('⚠️ Hãy lưu thông tin ở trang trung tâm trước khi mở trang đăng ký.');
-    openSequential(REGISTER_LINKS, 500);
-  };
-
-  // open bank links
-  document.getElementById('openBanks').onclick = () => {
-    const data = localStorage.getItem('tranthanhdz_data');
-    if (!data) return alert('⚠️ Hãy lưu thông tin ở trang trung tâm trước khi mở trang liên kết ngân hàng.');
-    openSequential(BANK_LINKS, 600);
-  };
-
-  // preload saved values into form (if any)
-  (function loadSaved(){
-    try {
-      const saved = JSON.parse(localStorage.getItem('tranthanhdz_data') || "{}");
-      if (saved && Object.keys(saved).length) {
-        document.getElementById('username').value = saved.username || '';
-        document.getElementById('password').value = saved.password || '';
-        document.getElementById('confirmPassword').value = saved.confirmPassword || '';
-        document.getElementById('withdrawPass').value = saved.withdrawPass || '';
-        document.getElementById('fullname').value = saved.fullname || '';
-        document.getElementById('accountNumber').value = saved.accountNumber || '';
-        document.getElementById('branch').value = saved.branch || '';
-      }
-    } catch(e) { console.warn(e); }
-  })();
-</script>
+    document.getElementById('openSites').onclick = () => sites.forEach(link => window.open(link, '_blank'));
+    document.getElementById('openBanks').onclick = () => banks.forEach(link => window.open(link, '_blank'));
+  </script>
 </body>
 </html>
