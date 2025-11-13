@@ -1,123 +1,178 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trần Thành DZ Tool Bào</title>
-<style>
-  body {
-    background: #0d1117;
-    color: #e6edf3;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 20px;
-  }
-  h1 {
-    color: #58a6ff;
-  }
-  input {
-    width: 80%;
-    max-width: 400px;
-    margin: 8px;
-    padding: 10px;
-    border: 1px solid #30363d;
-    border-radius: 8px;
-    background: #161b22;
-    color: #e6edf3;
-  }
-  button {
-    background: #238636;
-    color: white;
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  button:hover {
-    background: #2ea043;
-  }
-  .danger {
-    background: #d73a49;
-  }
-  .danger:hover {
-    background: #f85149;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trần Thành DZ Tool</title>
+  <style>
+    body {
+      background: #0f172a;
+      color: #f1f5f9;
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: #1e293b;
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      padding: 25px 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #38bdf8;
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 8px;
+      background: #334155;
+      color: #f8fafc;
+      outline: none;
+    }
+    input:focus {
+      background: #475569;
+    }
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #38bdf8;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    button:hover {
+      background: #0ea5e9;
+    }
+    .btn-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #64748b;
+      font-size: 13px;
+    }
+  </style>
 </head>
 <body>
-  <h1>💻 Trần Thành DZ Tool Bào</h1>
-  <p>Nhập thông tin bên dưới để tool tự điền khi mở 5 trang:</p>
+  <div class="container">
+    <h1>⚡ Trần Thành DZ Tool</h1>
 
-  <input id="username" placeholder="Tên tài khoản"><br>
-  <input id="password" placeholder="Mật khẩu"><br>
-  <input id="withdrawPass" placeholder="Mật khẩu rút tiền"><br>
-  <input id="fullname" placeholder="Họ và tên"><br>
-  <input id="accountNumber" placeholder="Số tài khoản ngân hàng"><br>
-  <input id="branch" placeholder="Chi nhánh (ví dụ: TP Hồ Chí Minh)"><br>
+    <label>Tên tài khoản</label>
+    <input id="username" placeholder="VD: tranthanh123">
 
-  <div>
-    <button id="save">💾 Lưu thông tin</button>
-    <button id="open-registers">🌐 Mở 5 trang đăng ký</button>
-    <button id="open-banks">🏦 Mở 5 trang liên kết ngân hàng</button>
-    <button class="danger" id="clear">🗑 Xóa dữ liệu cũ</button>
+    <label>Mật khẩu</label>
+    <input id="password" placeholder="VD: 123456abc" type="password">
+
+    <label>Mật khẩu rút tiền</label>
+    <input id="withdrawPass" placeholder="VD: 123456" type="password">
+
+    <label>Họ và tên</label>
+    <input id="fullname" placeholder="VD: Trần Thành">
+
+    <label>Chi nhánh ngân hàng</label>
+    <input id="branch" placeholder="VD: TP Hồ Chí Minh">
+
+    <label>Số tài khoản</label>
+    <input id="accountNumber" placeholder="VD: 0123456789">
+
+    <div class="btn-group">
+      <button id="save">💾 Lưu thông tin</button>
+      <button id="clear">🗑️ Xóa dữ liệu</button>
+    </div>
+
+    <div class="btn-group">
+      <button id="openRegister">🧾 Mở 5 trang đăng ký</button>
+      <button id="openBank">🏦 Mở 5 trang liên kết ngân hàng</button>
+    </div>
+
+    <div class="footer">© 2025 Trần Thành DZ | Tool Tự Động Điền</div>
   </div>
 
-  <p id="status" style="color:#58a6ff; margin-top:10px;"></p>
+  <script>
+    // 🔗 Danh sách trang cần mở
+    const sites = {
+      register: [
+        "https://m.mmoo.team/Account/Register",
+        "https://m.1tt88.vip/Account/Register",
+        "https://m.789p1.vip/Account/Register",
+        "https://m.1go99.vip/Account/Register",
+        "https://m.8nohu.vip/Account/Register"
+      ],
+      bank: [
+        "https://m.mmoo.team/Financial?type=withdraw",
+        "https://m.1tt88.vip/Financial?type=withdraw",
+        "https://m.789p1.vip/Financial?type=withdraw",
+        "https://m.1go99.vip/Financial?type=withdraw",
+        "https://m.8nohu.vip/Financial?type=withdraw"
+      ]
+    };
 
-<script>
-const sites = {
-  register: [
-    "https://m.mmoo.team/register",
-    "https://m.1tt88.vip/register",
-    "https://m.789p1.vip/register",
-    "https://m.1go99.vip/register",
-    "https://m.8nohu.vip/register"
-  ],
-  bank: [
-    "https://m.mmoo.team/Financial?type=withdraw",
-    "https://m.1tt88.vip/Financial?type=withdraw",
-    "https://m.789p1.vip/Financial?type=withdraw",
-    "https://m.1go99.vip/Financial?type=withdraw",
-    "https://m.8nohu.vip/Financial?type=withdraw"
-  ]
-};
+    // 🧩 Lưu dữ liệu vào localStorage
+    function saveData() {
+      const data = {
+        username: document.getElementById("username").value.trim(),
+        password: document.getElementById("password").value.trim(),
+        withdrawPass: document.getElementById("withdrawPass").value.trim(),
+        fullname: document.getElementById("fullname").value.trim(),
+        branch: document.getElementById("branch").value.trim(),
+        accountNumber: document.getElementById("accountNumber").value.trim(),
+      };
+      localStorage.setItem("tranthanhdz_data", JSON.stringify(data));
+      alert("✅ Đã lưu thông tin!");
+    }
 
-document.getElementById("save").onclick = () => {
-  const data = {
-    username: username.value.trim(),
-    password: password.value.trim(),
-    withdrawPass: withdrawPass.value.trim(),
-    fullname: fullname.value.trim(),
-    accountNumber: accountNumber.value.trim(),
-    branch: branch.value.trim()
-  };
-  localStorage.setItem("tranthanhdz_data", JSON.stringify(data));
-  status.innerText = "✅ Đã lưu thông tin!";
-};
+    // 🗑️ Xóa dữ liệu
+    function clearData() {
+      if (confirm("Bạn có chắc muốn xóa toàn bộ dữ liệu đã lưu?")) {
+        localStorage.removeItem("tranthanhdz_data");
+        document.querySelectorAll("input").forEach(el => el.value = "");
+        alert("🗑️ Đã xóa sạch dữ liệu!");
+      }
+    }
 
-document.getElementById("open-registers").onclick = () => {
-  const data = localStorage.getItem("tranthanhdz_data");
-  if (!data) return alert("⚠️ Hãy lưu thông tin trước khi mở trang!");
-  sites.register.forEach((url, i) => {
-    setTimeout(() => window.open(url, "_blank"), i * 600);
-  });
-};
+    // 🚀 Mở các trang
+    function openSites(list) {
+      list.forEach((url, i) => {
+        setTimeout(() => window.open(url, "_blank"), i * 500);
+      });
+    }
 
-document.getElementById("open-banks").onclick = () => {
-  const data = localStorage.getItem("tranthanhdz_data");
-  if (!data) return alert("⚠️ Hãy lưu thông tin trước khi mở trang!");
-  sites.bank.forEach((url, i) => {
-    setTimeout(() => window.open(url, "_blank"), i * 600);
-  });
-};
+    // --- Sự kiện nút ---
+    document.getElementById("save").onclick = saveData;
+    document.getElementById("clear").onclick = clearData;
+    document.getElementById("openRegister").onclick = () => openSites(sites.register);
+    document.getElementById("openBank").onclick = () => openSites(sites.bank);
 
-document.getElementById("clear").onclick = () => {
-  localStorage.removeItem("tranthanhdz_data");
-  status.innerText = "🗑 Đã xóa toàn bộ dữ liệu!";
-  document.querySelectorAll("input").forEach(e => e.value = "");
-};
-</script>
+    // --- Nạp lại dữ liệu đã lưu ---
+    const saved = JSON.parse(localStorage.getItem("tranthanhdz_data") || "{}");
+    if (saved.username) {
+      document.getElementById("username").value = saved.username || "";
+      document.getElementById("password").value = saved.password || "";
+      document.getElementById("withdrawPass").value = saved.withdrawPass || "";
+      document.getElementById("fullname").value = saved.fullname || "";
+      document.getElementById("branch").value = saved.branch || "";
+      document.getElementById("accountNumber").value = saved.accountNumber || "";
+    }
+  </script>
 </body>
 </html>
