@@ -1,152 +1,123 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TranThanh AutoFill v4.1</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f6f8fa;
-  padding: 20px;
-  text-align: center;
-}
-.container {
-  background: #fff;
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-input {
-  width: 90%;
-  padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-button {
-  background: #0084ff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 10px 5px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-button:hover {
-  background: #006fd6;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TranThanh AutoFill v4.2</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .box {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 6px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 8px 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056c7;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <h2>⚙️ TranThanh AutoFill v4.1</h2>
-  <p>Nhập thông tin 1 lần, tự động điền cho 5 trang đăng ký</p>
+  <div class="box">
+    <h2>⚙️ TranThanh AutoFill v4.2</h2>
+    <p>Điền 1 lần — tự động cho 5 trang</p>
 
-  <input type="text" id="username" placeholder="Tên đăng nhập"><br>
-  <input type="password" id="password" placeholder="Mật khẩu"><br>
-  <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu"><br>
-  <input type="password" id="withdrawPass" placeholder="Mật khẩu rút tiền"><br>
-  <input type="text" id="fullname" placeholder="Họ và tên thật"><br>
-  <input type="text" id="bankNumber" placeholder="Số tài khoản ngân hàng"><br>
+    <input id="username" placeholder="Tên tài khoản">
+    <input id="password" placeholder="Mật khẩu">
+    <input id="confirmPassword" placeholder="Xác nhận mật khẩu">
+    <input id="withdrawPass" placeholder="Mật khẩu rút tiền">
+    <input id="fullname" placeholder="Họ và tên thật">
+    <input id="bankNumber" placeholder="Số tài khoản ngân hàng">
 
-  <button onclick="saveData()">💾 Lưu thông tin</button>
-  <button onclick="openAndFill()">🚀 Mở 5 trang đăng ký</button>
-</div>
+    <div>
+      <button onclick="saveData()">💾 Lưu thông tin</button>
+      <button onclick="openAndFill()">🚀 Mở 5 trang đăng ký</button>
+    </div>
+  </div>
 
-<script>
-const sites = [
-  "https://m.8nohu.vip/Account/Register",
-  "https://m.1go99.vip/Account/Register",
-  "https://m.mmoo.team/Account/Register",
-  "https://m.789p1.vip/Account/Register",
-  "https://m.1tt88.vip/Account/Register"
-];
+  <script>
+  const links = [
+    "https://m.8nohu.vip/Account/Register",
+    "https://m.1go99.vip/Account/Register",
+    "https://m.mmoo.team/Account/Register",
+    "https://m.789p1.vip/Account/Register",
+    "https://m.1tt88.vip/Account/Register"
+  ];
 
-// Lưu dữ liệu
-function saveData() {
-  const data = {
-    username: document.getElementById("username").value.trim(),
-    password: document.getElementById("password").value.trim(),
-    confirmPassword: document.getElementById("confirmPassword").value.trim(),
-    withdrawPass: document.getElementById("withdrawPass").value.trim(),
-    fullname: document.getElementById("fullname").value.trim(),
-    bankNumber: document.getElementById("bankNumber").value.trim(),
-  };
-  localStorage.setItem("userData", JSON.stringify(data));
-  alert("✅ Đã lưu thông tin vào trình duyệt!");
-}
+  function saveData() {
+    const data = {
+      username: document.getElementById("username").value.trim(),
+      password: document.getElementById("password").value.trim(),
+      confirmPassword: document.getElementById("confirmPassword").value.trim(),
+      withdrawPass: document.getElementById("withdrawPass").value.trim(),
+      fullname: document.getElementById("fullname").value.trim(),
+      bankNumber: document.getElementById("bankNumber").value.trim(),
+    };
+    localStorage.setItem("autoData", JSON.stringify(data));
+    alert("✅ Đã lưu dữ liệu!");
+  }
 
-// Mở 5 trang & tự điền
-function openAndFill() {
-  const data = JSON.parse(localStorage.getItem("userData"));
-  if (!data) return alert("⚠️ Chưa có dữ liệu, hãy lưu trước!");
+  function openAndFill() {
+    const data = JSON.parse(localStorage.getItem("autoData"));
+    if (!data) {
+      alert("⚠️ Bạn chưa lưu dữ liệu!");
+      return;
+    }
 
-  sites.forEach(url => {
-    const tab = window.open(url, "_blank");
-
-    const script = `
-      (function autoFill() {
-        const fillFields = () => {
-          const allInputs = Array.from(document.querySelectorAll("input, select, textarea"));
-          if (!allInputs.length) return setTimeout(fillFields, 1000);
-
-          const match = (el, ...keys) => {
-            const attrs = [el.name, el.id, el.placeholder, el.getAttribute("formcontrolname"), el.getAttribute("ng-reflect-name")].join(" ").toLowerCase();
-            return keys.some(k => attrs.includes(k));
-          };
-
-          let filled = 0;
-          allInputs.forEach(input => {
-            if (match(input, "user", "account", "tên đăng nhập", "tài khoản")) {
-              input.value = "${data.username}";
-              filled++;
-            }
-            else if (match(input, "password", "mật khẩu") && !match(input, "withdraw", "rút")) {
-              input.value = "${data.password}";
-              filled++;
-            }
-            else if (match(input, "confirm", "nhập lại", "xác nhận")) {
-              input.value = "${data.confirmPassword}";
-              filled++;
-            }
-            else if (match(input, "withdraw", "rút")) {
-              input.value = "${data.withdrawPass}";
-              filled++;
-            }
-            else if (match(input, "name", "fullname", "họ", "tên thật")) {
-              input.value = "${data.fullname}";
-              filled++;
-            }
-            else if (match(input, "bank", "stk", "accountno", "số tài khoản")) {
-              input.value = "${data.bankNumber}";
-              filled++;
-            }
-          });
-
-          if (filled > 0) console.log("✅ Auto-fill hoàn tất tại", location.href);
-          else setTimeout(fillFields, 1000);
-        };
-
-        const waitForForm = setInterval(() => {
-          if (document.readyState === "complete") {
-            clearInterval(waitForForm);
-            setTimeout(fillFields, 1000);
+    links.forEach(url => {
+      const tab = window.open(url, "_blank");
+      const fillScript = `
+        (function(){
+          function tryFill(){
+            const inputs = document.querySelectorAll('input');
+            if (!inputs.length){setTimeout(tryFill,1000);return;}
+            inputs.forEach(inp=>{
+              const name=(inp.name+inp.id+inp.placeholder).toLowerCase();
+              if(name.includes('user')||name.includes('account')||name.includes('tên tài')) inp.value='${data.username}';
+              else if(name.includes('mật khẩu')&&!name.includes('rút')) inp.value='${data.password}';
+              else if(name.includes('xác nhận')||name.includes('confirm')) inp.value='${data.confirmPassword}';
+              else if(name.includes('rút')||name.includes('withdraw')) inp.value='${data.withdrawPass}';
+              else if(name.includes('họ')||name.includes('tên')) inp.value='${data.fullname}';
+              else if(name.includes('bank')||name.includes('tài khoản')) inp.value='${data.bankNumber}';
+            });
           }
-        }, 500);
-      })();
-    `;
-
-    const inject = setInterval(() => {
-      if (tab.document && tab.document.readyState === "complete") {
-        tab.eval(script);
-        clearInterval(inject);
-      }
-    }, 1500);
-  });
-}
-</script>
+          document.readyState==='complete'?tryFill():window.addEventListener('load',tryFill);
+        })();
+      `;
+      const timer = setInterval(()=>{
+        try{
+          if(tab && tab.document && tab.document.readyState==='complete'){
+            tab.eval(fillScript);
+            clearInterval(timer);
+          }
+        }catch(e){}
+      },1000);
+    });
+  }
+  </script>
 </body>
 </html>
