@@ -1,3 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TranThanh AutoFill v4.1</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f6f8fa;
+  padding: 20px;
+  text-align: center;
+}
+.container {
+  background: #fff;
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+input {
+  width: 90%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+button {
+  background: #0084ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:hover {
+  background: #006fd6;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>⚙️ TranThanh AutoFill v4.1</h2>
+  <p>Nhập thông tin 1 lần, tự động điền cho 5 trang đăng ký</p>
+
+  <input type="text" id="username" placeholder="Tên đăng nhập"><br>
+  <input type="password" id="password" placeholder="Mật khẩu"><br>
+  <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu"><br>
+  <input type="password" id="withdrawPass" placeholder="Mật khẩu rút tiền"><br>
+  <input type="text" id="fullname" placeholder="Họ và tên thật"><br>
+  <input type="text" id="bankNumber" placeholder="Số tài khoản ngân hàng"><br>
+
+  <button onclick="saveData()">💾 Lưu thông tin</button>
+  <button onclick="openAndFill()">🚀 Mở 5 trang đăng ký</button>
+</div>
+
 <script>
 const sites = [
   "https://m.8nohu.vip/Account/Register",
@@ -7,7 +65,7 @@ const sites = [
   "https://m.1tt88.vip/Account/Register"
 ];
 
-// 🔹 Lưu dữ liệu
+// Lưu dữ liệu
 function saveData() {
   const data = {
     username: document.getElementById("username").value.trim(),
@@ -21,7 +79,7 @@ function saveData() {
   alert("✅ Đã lưu thông tin vào trình duyệt!");
 }
 
-// 🔹 Hàm mở 5 trang & auto điền
+// Mở 5 trang & tự điền
 function openAndFill() {
   const data = JSON.parse(localStorage.getItem("userData"));
   if (!data) return alert("⚠️ Chưa có dữ liệu, hãy lưu trước!");
@@ -72,7 +130,6 @@ function openAndFill() {
           else setTimeout(fillFields, 1000);
         };
 
-        // Đợi Angular render xong form
         const waitForForm = setInterval(() => {
           if (document.readyState === "complete") {
             clearInterval(waitForForm);
@@ -82,7 +139,6 @@ function openAndFill() {
       })();
     `;
 
-    // Đợi trang mở hoàn toàn trước khi inject
     const inject = setInterval(() => {
       if (tab.document && tab.document.readyState === "complete") {
         tab.eval(script);
@@ -92,3 +148,5 @@ function openAndFill() {
   });
 }
 </script>
+</body>
+</html>
