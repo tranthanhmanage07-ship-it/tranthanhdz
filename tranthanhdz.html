@@ -1,158 +1,123 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🔧 Trần Thành Dz Tool Bảo</title>
-  <style>
-    :root{--bg:#071020;--card:#0b1220;--accent:#ff6b8a;--muted:#9aa4b2}
-    body{margin:0;background:linear-gradient(180deg,#051423 0%, #071020 100%);color:#fff;font-family:Inter,Arial,Helvetica,sans-serif}
-    .wrap{max-width:940px;margin:18px auto;padding:20px}
-    header{display:flex;align-items:center;gap:12px}
-    h1{margin:0;font-size:28px}
-    .desc{color:var(--muted);margin:8px 0 18px}
-    /* small help */
-    .help{background:rgba(255,255,255,0.03);padding:12px;border-radius:10px;color:var(--muted);margin-bottom:12px}
-    /* mobile friendly */
-    @media(max-width:480px){ .wrap{padding:12px} }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trần Thành DZ Tool Bào</title>
+<style>
+  body {
+    background: #0d1117;
+    color: #e6edf3;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+  h1 {
+    color: #58a6ff;
+  }
+  input {
+    width: 80%;
+    max-width: 400px;
+    margin: 8px;
+    padding: 10px;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    background: #161b22;
+    color: #e6edf3;
+  }
+  button {
+    background: #238636;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  button:hover {
+    background: #2ea043;
+  }
+  .danger {
+    background: #d73a49;
+  }
+  .danger:hover {
+    background: #f85149;
+  }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>🔧 Trần Thành Dz Tool Bảo</h1>
-    </header>
-    <p class="desc">Nhập profile -> Lưu -> Xuất JSON -> Dán vào <code>data.json</code> trên repo -> Commit. Sau đó mở site bằng Tampermonkey (Kiwi) để script tự nhận profile.</p>
+  <h1>💻 Trần Thành DZ Tool Bào</h1>
+  <p>Nhập thông tin bên dưới để tool tự điền khi mở 5 trang:</p>
 
-    <div class="help">
-      <strong>Tip:</strong> Bạn có thể tạo nhiều profile. Để sử dụng trên site: Commit `data.json` rồi reload trang nhà cái.
-    </div>
+  <input id="username" placeholder="Tên tài khoản"><br>
+  <input id="password" placeholder="Mật khẩu"><br>
+  <input id="withdrawPass" placeholder="Mật khẩu rút tiền"><br>
+  <input id="fullname" placeholder="Họ và tên"><br>
+  <input id="accountNumber" placeholder="Số tài khoản ngân hàng"><br>
+  <input id="branch" placeholder="Chi nhánh (ví dụ: TP Hồ Chí Minh)"><br>
+
+  <div>
+    <button id="save">💾 Lưu thông tin</button>
+    <button id="open-registers">🌐 Mở 5 trang đăng ký</button>
+    <button id="open-banks">🏦 Mở 5 trang liên kết ngân hàng</button>
+    <button class="danger" id="clear">🗑 Xóa dữ liệu cũ</button>
   </div>
 
-  <!-- Panel quản lý (floating) -->
-  <script>
-  (function(){
-    // --- localStorage key
-    const KEY = 'tran_profiles';
-    function $c(t,p){ const e=document.createElement(t); if(p) Object.assign(e,p); return e; }
-    function load(){ try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
-    function save(v){ localStorage.setItem(KEY, JSON.stringify(v||[])); }
+  <p id="status" style="color:#58a6ff; margin-top:10px;"></p>
 
-    // build UI
-    const panel = $c('div');
-    Object.assign(panel.style,{
-      position:'fixed',right:'12px',bottom:'12px',zIndex:99999,
-      width:'360px',maxWidth:'94vw',background:'var(--card)',padding:'12px',borderRadius:'12px',color:'#fff',
-      boxShadow:'0 8px 28px rgba(0,0,0,0.6)',fontSize:'14px'
-    });
-    panel.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <strong>⚙️ Profiles</strong>
-        <small style="opacity:.8">v1.0</small>
-      </div>
-      <div style="margin-top:8px">
-        <input id="p_name" placeholder="Tên profile" style="width:100%;padding:8px;border-radius:8px;border:none;margin-bottom:6px;background:#071820;color:#fff">
-        <div style="display:flex;gap:6px">
-          <input id="p_user" placeholder="Tên tài khoản" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
-          <input id="p_pass" placeholder="Mật khẩu" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
-        </div>
-        <input id="p_withdraw" placeholder="Mật khẩu rút tiền" style="width:100%;padding:8px;border-radius:8px;border:none;margin-top:6px;background:#071820;color:#fff">
-        <input id="p_fullname" placeholder="Họ và tên (IN HOA)" style="width:100%;padding:8px;border-radius:8px;border:none;margin-top:6px;background:#071820;color:#fff">
-        <div style="display:flex;gap:6px;margin-top:6px">
-          <input id="p_account" placeholder="Số tài khoản" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
-          <input id="p_branch" placeholder="Chi nhánh / Thành phố" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
-        </div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button id="btnSave" style="flex:1;padding:8px;border-radius:8px;border:none;background:#ff6b8a;color:#000">Lưu profile</button>
-          <button id="btnAdd" style="flex:1;padding:8px;border-radius:8px;border:none;background:#06d6a0;color:#000">Thêm mới</button>
-        </div>
-      </div>
+<script>
+const sites = {
+  register: [
+    "https://m.mmoo.team/register",
+    "https://m.1tt88.vip/register",
+    "https://m.789p1.vip/register",
+    "https://m.1go99.vip/register",
+    "https://m.8nohu.vip/register"
+  ],
+  bank: [
+    "https://m.mmoo.team/Financial?type=withdraw",
+    "https://m.1tt88.vip/Financial?type=withdraw",
+    "https://m.789p1.vip/Financial?type=withdraw",
+    "https://m.1go99.vip/Financial?type=withdraw",
+    "https://m.8nohu.vip/Financial?type=withdraw"
+  ]
+};
 
-      <div id="list" style="margin-top:10px;max-height:180px;overflow:auto"></div>
+document.getElementById("save").onclick = () => {
+  const data = {
+    username: username.value.trim(),
+    password: password.value.trim(),
+    withdrawPass: withdrawPass.value.trim(),
+    fullname: fullname.value.trim(),
+    accountNumber: accountNumber.value.trim(),
+    branch: branch.value.trim()
+  };
+  localStorage.setItem("tranthanhdz_data", JSON.stringify(data));
+  status.innerText = "✅ Đã lưu thông tin!";
+};
 
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button id="exportJSON" style="flex:1;padding:8px;border-radius:8px;border:none;background:#3b82f6;color:#fff">Xuất JSON</button>
-        <button id="copyJSON" style="flex:1;padding:8px;border-radius:8px;border:none;background:#f59e0b;color:#000">Sao chép</button>
-      </div>
+document.getElementById("open-registers").onclick = () => {
+  const data = localStorage.getItem("tranthanhdz_data");
+  if (!data) return alert("⚠️ Hãy lưu thông tin trước khi mở trang!");
+  sites.register.forEach((url, i) => {
+    setTimeout(() => window.open(url, "_blank"), i * 600);
+  });
+};
 
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button id="openRegs" style="flex:1;padding:8px;border-radius:8px;border:none;background:#10b981;color:#000">Mở 5 trang đăng ký</button>
-        <button id="openBanks" style="flex:1;padding:8px;border-radius:8px;border:none;background:#3b82f6;color:#fff">Mở trang liên kết ngân hàng</button>
-      </div>
+document.getElementById("open-banks").onclick = () => {
+  const data = localStorage.getItem("tranthanhdz_data");
+  if (!data) return alert("⚠️ Hãy lưu thông tin trước khi mở trang!");
+  sites.bank.forEach((url, i) => {
+    setTimeout(() => window.open(url, "_blank"), i * 600);
+  });
+};
 
-      <div style="margin-top:8px;display:flex;gap:8px">
-        <input id="delay" type="number" value="800" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff">
-        <select id="selProfile" style="flex:1;padding:8px;border-radius:8px;border:none;background:#071820;color:#fff"></select>
-      </div>
-
-      <small style="display:block;margin-top:8px;opacity:.8">Sau khi sửa: dùng "Xuất JSON" hoặc "Sao chép" -> vào repo -> mở data.json -> dán -> Commit.</small>
-    `;
-
-    document.body.appendChild(panel);
-
-    // helpers
-    function renderList(){
-      const arr = load();
-      const list = panel.querySelector('#list');
-      const sel = panel.querySelector('#selProfile');
-      sel.innerHTML = '';
-      list.innerHTML = '';
-      if(arr.length===0){ list.innerHTML = '<div style="opacity:.8">Chưa có profile</div>'; return; }
-      arr.forEach((p, i)=>{
-        const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.padding='6px 0'; row.style.borderBottom='1px solid rgba(255,255,255,0.03)';
-        row.innerHTML = `<div><b>${p.name}</b><div style="opacity:.7;font-size:12px">${p.user || ''} · ${p.account || ''}</div></div>`;
-        const btns = document.createElement('div');
-        const set = document.createElement('button'); set.textContent='Set'; set.style.marginRight='6px';
-        const del = document.createElement('button'); del.textContent='X';
-        Object.assign(set.style,{padding:'6px',borderRadius:'6px',border:'none',background:'#06b6d4',color:'#000'});
-        Object.assign(del.style,{padding:'6px',borderRadius:'6px',border:'none',background:'#ef4444',color:'#fff'});
-        set.onclick=()=> loadToForm(i);
-        del.onclick=()=> { if(confirm('Xóa profile này?')) { arr.splice(i,1); save(arr); renderList(); } };
-        btns.appendChild(set); btns.appendChild(del); row.appendChild(btns);
-        list.appendChild(row);
-
-        const opt = document.createElement('option'); opt.value = p.name; opt.textContent = p.name; sel.appendChild(opt);
-      });
-    }
-    function loadToForm(i){
-      const arr = load();
-      const p = arr[i];
-      if(!p) return;
-      panel.querySelector('#p_name').value = p.name || '';
-      panel.querySelector('#p_user').value = p.user || '';
-      panel.querySelector('#p_pass').value = p.pass || '';
-      panel.querySelector('#p_withdraw').value = p.withdraw || '';
-      panel.querySelector('#p_fullname').value = p.fullname || '';
-      panel.querySelector('#p_account').value = p.account || '';
-      panel.querySelector('#p_branch').value = p.branch || '';
-    }
-
-    // events
-    panel.querySelector('#btnAdd').onclick = ()=>{
-      const arr = load();
-      const p = {
-        name: panel.querySelector('#p_name').value.trim() || ('profile'+(arr.length+1)),
-        user: panel.querySelector('#p_user').value.trim(),
-        pass: panel.querySelector('#p_pass').value.trim(),
-        withdraw: panel.querySelector('#p_withdraw').value.trim(),
-        fullname: panel.querySelector('#p_fullname').value.trim(),
-        account: panel.querySelector('#p_account').value.trim(),
-        branch: panel.querySelector('#p_branch').value.trim()
-      };
-      arr.push(p); save(arr); renderList(); alert('Đã thêm profile');
-    };
-
-    panel.querySelector('#btnSave').onclick = ()=>{
-      const arr = load();
-      const name = panel.querySelector('#p_name').value.trim();
-      if(!name) return alert('Nhập tên profile để lưu');
-      const p = {
-        name: name,
-        user: panel.querySelector('#p_user').value.trim(),
-        pass: panel.querySelector('#p_pass').value.trim(),
-        withdraw: panel.querySelector('#p_withdraw').value.trim(),
-        fullname: panel.querySelector('#p_fullname').value.trim(),
-        account: panel.querySelector('#p_account').value.trim(),
-        branch: panel.querySelector('#p_branch').value.trim()
-      };
-      const idx = arr.findIndex(x=>x.name===name);
+document.getElementById("clear").onclick = () => {
+  localStorage.removeItem("tranthanhdz_data");
+  status.innerText = "🗑 Đã xóa toàn bộ dữ liệu!";
+  document.querySelectorAll("input").forEach(e => e.value = "");
+};
+</script>
+</body>
+</html>
