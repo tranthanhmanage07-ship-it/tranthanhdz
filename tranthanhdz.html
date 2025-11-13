@@ -1,86 +1,26 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <title>Trần Thành Dz Tool Bào</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;background:#0f1724;color:#e6eef8;padding:20px}
-    .card{background:#0b1220;padding:18px;border-radius:10px;max-width:720px;margin:0 auto}
-    label{display:block;margin-top:12px;color:#cbd5e1}
-    input{width:100%;padding:10px;margin-top:6px;border-radius:6px;border:1px solid #1f2937;background:#081023;color:#fff}
-    .row{display:flex;gap:12px}
-    .btn{display:inline-block;padding:10px 14px;border-radius:8px;margin-top:12px;cursor:pointer}
-    .btn-primary{background:#ff4081;color:#fff;border:none}
-    .btn-ghost{background:#111827;color:#fff;border:1px solid #1f2937}
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trần Thành DZ Tool</title>
 </head>
-<body>
-  <div class="card">
-    <h2>🛠️ Trần Thành Dz Tool Bào</h2>
+<body style="font-family: Arial; text-align:center; padding-top:50px;">
+  <h1>🚀 Trần Thành DZ Tool</h1>
+  <p>Nhấn vào nút dưới để tự động mở và điền dữ liệu</p>
 
-    <label>Tên tài khoản
-      <input id="username" placeholder="Tên tài khoản">
-    </label>
+  <button 
+    style="font-size:18px; padding:10px 20px; border:none; border-radius:10px; background-color:#4CAF50; color:white;"
+    onclick="autoFill()">
+    ▶️ Bắt đầu Tự động điền
+  </button>
 
-    <label>Mật khẩu
-      <input id="password" placeholder="Mật khẩu">
-    </label>
-
-    <label>Mật khẩu rút tiền
-      <input id="withdrawPass" placeholder="Mật khẩu rút tiền">
-    </label>
-
-    <label>Họ và tên (IN HOA)
-      <input id="fullname" placeholder="HỌ VÀ TÊN">
-    </label>
-
-    <div class="row">
-      <label style="flex:1">Số tài khoản
-        <input id="accountNumber" placeholder="Số tài khoản">
-      </label>
-      <label style="flex:1">Chi nhánh / Thành phố
-        <input id="branch" placeholder="Chi nhánh / Thành phố">
-      </label>
-    </div>
-
-    <div>
-      <button id="saveJson" class="btn btn-primary">💾 Lưu dữ liệu tự động</button>
-      <button id="exportJson" class="btn btn-ghost">📤 Tải file data.json</button>
-    </div>
-
-    <p style="color:#94a3b8;font-size:13px;margin-top:12px">
-      Hướng dẫn nhanh: nhập thông tin → nhấn "Lưu dữ liệu tự động" → mở trang đăng ký → nhấn nút "⚡ Tự động điền".
-    </p>
-  </div>
-
-<script>
-  // lưu dữ liệu vào localStorage của trang này (chỉ để test local)
-  function getForm() {
-    return {
-      username: document.getElementById('username').value,
-      password: document.getElementById('password').value,
-      withdrawPass: document.getElementById('withdrawPass').value,
-      fullname: document.getElementById('fullname').value,
-      accountNumber: document.getElementById('accountNumber').value,
-      branch: document.getElementById('branch').value
-    };
-  }
-  document.getElementById('saveJson').onclick = () => {
-    const d = getForm();
-    // show as string so you can copy paste to data.json if want
-    const s = JSON.stringify(d, null, 2);
-    navigator.clipboard.writeText(s).then(()=>{
-      alert('✅ Dữ liệu đã copy vào clipboard. Dán vào file data.json trên GitHub (hoặc tải bằng nút Export).');
-    });
-  };
-  document.getElementById('exportJson').onclick = () => {
-    const d = getForm();
-    const blob = new Blob([JSON.stringify(d,null,2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download='data.json'; document.body.appendChild(a); a.click(); a.remove();
-  };
-</script>
+  <script>
+    function autoFill() {
+      alert('Đang kích hoạt script autofill...');
+      // Thay link này bằng link file autofill.user.js trong repo của bạn
+      window.location.href = 'https://tranthanhmanage.github.io/tranthanhdz/autofill.user.js';
+    }
+  </script>
 </body>
 </html>
