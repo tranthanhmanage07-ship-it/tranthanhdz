@@ -7,7 +7,7 @@ const sites = [
   "https://m.1tt88.vip/Account/Register"
 ];
 
-// 🔹 Lưu dữ liệu người dùng
+// 🔹 Lưu dữ liệu
 function saveData() {
   const data = {
     username: document.getElementById("username").value.trim(),
@@ -18,10 +18,10 @@ function saveData() {
     bankNumber: document.getElementById("bankNumber").value.trim(),
   };
   localStorage.setItem("userData", JSON.stringify(data));
-  alert("✅ Đã lưu thông tin!");
+  alert("✅ Đã lưu thông tin vào trình duyệt!");
 }
 
-// 🔹 Mở 5 trang đăng ký và điền tự động
+// 🔹 Hàm mở 5 trang & auto điền
 function openAndFill() {
   const data = JSON.parse(localStorage.getItem("userData"));
   if (!data) return alert("⚠️ Chưa có dữ liệu, hãy lưu trước!");
@@ -30,33 +30,63 @@ function openAndFill() {
     const tab = window.open(url, "_blank");
 
     const script = `
-      (function fillForm() {
-        const fill = () => {
-          const inputs = document.querySelectorAll("input, select");
-          let filled = 0;
+      (function autoFill() {
+        const fillFields = () => {
+          const allInputs = Array.from(document.querySelectorAll("input, select, textarea"));
+          if (!allInputs.length) return setTimeout(fillFields, 1000);
 
-          inputs.forEach(input => {
-            const name = input.getAttribute("formcontrolname") || input.name || "";
-            if (/account/i.test(name)) { input.value = "${data.username}"; filled++; }
-            if (/password/i.test(name) && !/withdraw/i.test(name)) { input.value = "${data.password}"; filled++; }
-            if (/withdraw/i.test(name)) { input.value = "${data.withdrawPass}"; filled++; }
-            if (/fullname|realname|name/i.test(name)) { input.value = "${data.fullname}"; filled++; }
-            if (/confirm/i.test(name)) { input.value = "${data.confirmPassword}"; filled++; }
-            if (/bank/i.test(name) || /accountno/i.test(name)) { input.value = "${data.bankNumber}"; filled++; }
+          const match = (el, ...keys) => {
+            const attrs = [el.name, el.id, el.placeholder, el.getAttribute("formcontrolname"), el.getAttribute("ng-reflect-name")].join(" ").toLowerCase();
+            return keys.some(k => attrs.includes(k));
+          };
+
+          let filled = 0;
+          allInputs.forEach(input => {
+            if (match(input, "user", "account", "tên đăng nhập", "tài khoản")) {
+              input.value = "${data.username}";
+              filled++;
+            }
+            else if (match(input, "password", "mật khẩu") && !match(input, "withdraw", "rút")) {
+              input.value = "${data.password}";
+              filled++;
+            }
+            else if (match(input, "confirm", "nhập lại", "xác nhận")) {
+              input.value = "${data.confirmPassword}";
+              filled++;
+            }
+            else if (match(input, "withdraw", "rút")) {
+              input.value = "${data.withdrawPass}";
+              filled++;
+            }
+            else if (match(input, "name", "fullname", "họ", "tên thật")) {
+              input.value = "${data.fullname}";
+              filled++;
+            }
+            else if (match(input, "bank", "stk", "accountno", "số tài khoản")) {
+              input.value = "${data.bankNumber}";
+              filled++;
+            }
           });
 
-          if (filled > 0) console.log("✅ Auto-fill done on", location.href);
-          else setTimeout(fill, 1000);
+          if (filled > 0) console.log("✅ Auto-fill hoàn tất tại", location.href);
+          else setTimeout(fillFields, 1000);
         };
-        fill();
+
+        // Đợi Angular render xong form
+        const waitForForm = setInterval(() => {
+          if (document.readyState === "complete") {
+            clearInterval(waitForForm);
+            setTimeout(fillFields, 1000);
+          }
+        }, 500);
       })();
     `;
 
-    // Đợi tab load xong mới inject script
-    const timer = setInterval(() => {
+    // Đợi trang mở hoàn toàn trước khi inject
+    const inject = setInterval(() => {
       if (tab.document && tab.document.readyState === "complete") {
         tab.eval(script);
-        clearInterval(timer);
+        clearInterval(inject);
       }
     }, 1500);
   });
