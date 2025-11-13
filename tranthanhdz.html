@@ -3,30 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trần Thành DZ Tool</title>
+  <title>Trần Thành DZ Tool Bào</title>
   <style>
-    body { background:#000; color:#fff; font-family:Arial; text-align:center; padding:20px; }
-    input { display:block; margin:10px auto; padding:8px; border-radius:6px; width:260px; border:none; }
-    button { background:#ff4081; color:#fff; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; margin:10px; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #38bdf8;
+    }
+    input, button {
+      padding: 10px;
+      margin: 8px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    input {
+      width: 250px;
+      background: #1e293b;
+      color: white;
+    }
+    button {
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    #save {
+      background: #22c55e;
+      color: white;
+    }
+    #start, #openAll {
+      background: #3b82f6;
+      color: white;
+    }
+    button:hover {
+      opacity: 0.85;
+    }
   </style>
 </head>
 <body>
-  <h2>🔥 Trần Thành DZ Tool - Trung tâm</h2>
+  <h1>🧠 Trần Thành DZ Tool Bào</h1>
+  <p>Điền thông tin để lưu và tự động dùng cho 5 trang đăng ký + 5 trang liên kết ngân hàng</p>
 
-  <input id="username" placeholder="Tên tài khoản">
-  <input id="password" placeholder="Mật khẩu thành viên" type="password">
-  <input id="confirm" placeholder="Xác nhận mật khẩu" type="password">
-  <input id="withdrawPass" placeholder="Mật khẩu rút tiền" type="password">
-  <input id="fullname" placeholder="Họ và tên thật">
-  <input id="accountNumber" placeholder="Số tài khoản ngân hàng">
-  <input id="branch" placeholder="Chi nhánh / Thành phố">
+  <div>
+    <input id="username" placeholder="Tên tài khoản"><br>
+    <input id="password" placeholder="Mật khẩu thành viên"><br>
+    <input id="withdrawPass" placeholder="Mật khẩu rút tiền"><br>
+    <input id="fullname" placeholder="Họ và tên thật"><br>
+    <input id="branch" placeholder="Chi nhánh ngân hàng"><br>
+    <input id="accountNumber" placeholder="Số tài khoản ngân hàng"><br>
+  </div>
 
-  <button id="saveBtn">💾 Lưu thông tin</button>
-  <button id="openSites">🌐 Mở 5 trang đăng ký</button>
-  <button id="openBanks">🏦 Mở trang liên kết ngân hàng</button>
+  <div>
+    <button id="save">💾 Lưu thông tin</button>
+    <button id="start">🚀 Bắt đầu chạy tool</button>
+    <button id="openAll">🔁 Mở lại tất cả</button>
+  </div>
+
+  <p id="status" style="margin-top: 15px; color: #22c55e;"></p>
 
   <script>
-    const sites = [
+    const linksRegister = [
       "https://m.8nohu.vip/Account/Register",
       "https://m.1go99.vip/Account/Register",
       "https://m.mmoo.team/Account/Register",
@@ -34,7 +76,7 @@
       "https://m.1tt88.vip/Account/Register"
     ];
 
-    const banks = [
+    const linksBank = [
       "https://m.8nohu.vip/Financial?type",
       "https://m.1go99.vip/Financial?type",
       "https://m.mmoo.team/Financial?type",
@@ -42,23 +84,33 @@
       "https://m.1tt88.vip/Financial?type"
     ];
 
-    const saveBtn = document.getElementById('saveBtn');
-    saveBtn.onclick = () => {
+    document.getElementById("save").onclick = () => {
       const data = {
-        username: username.value,
-        password: password.value,
-        withdrawPass: withdrawPass.value,
-        fullname: fullname.value,
-        accountNumber: accountNumber.value,
-        branch: branch.value
+        username: username.value.trim(),
+        password: password.value.trim(),
+        withdrawPass: withdrawPass.value.trim(),
+        fullname: fullname.value.trim(),
+        branch: branch.value.trim(),
+        accountNumber: accountNumber.value.trim()
       };
       localStorage.setItem("tranthanhdz_data", JSON.stringify(data));
-      window.postMessage({ type: "SAVE_TRAN_THANH_DATA", payload: data }, "*");
-      alert("✅ Đã lưu & gửi dữ liệu sang Tampermonkey!");
+      status.textContent = "✅ Đã lưu dữ liệu vào trình duyệt!";
     };
 
-    document.getElementById('openSites').onclick = () => sites.forEach(link => window.open(link, '_blank'));
-    document.getElementById('openBanks').onclick = () => banks.forEach(link => window.open(link, '_blank'));
+    document.getElementById("start").onclick = () => {
+      const data = localStorage.getItem("tranthanhdz_data");
+      if (!data) {
+        alert("⚠️ Chưa có dữ liệu nào được lưu!");
+        return;
+      }
+      [...linksRegister, ...linksBank].forEach(link => window.open(link, "_blank"));
+      status.textContent = "🚀 Đang mở 10 trang...";
+    };
+
+    document.getElementById("openAll").onclick = () => {
+      [...linksRegister, ...linksBank].forEach(link => window.open(link, "_blank"));
+      status.textContent = "🔁 Đã mở lại tất cả trang!";
+    };
   </script>
 </body>
-</html>
+  </html>
