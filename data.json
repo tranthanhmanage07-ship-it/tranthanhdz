@@ -1,8 +1,30 @@
 {
-  "username": "tranthanh",
-  "password": "thanh213",
-  "withdrawPass": "2007",
-  "fullname": "HOANG TRAN THANH",
-  "branch": "hcm",
-  "accountNumber": "362884662"
+  "active": "profile1",
+  "profiles": [
+    {
+      "name": "profile1",
+      "user": "tranthanh",
+      "pass": "thanh213",
+      "withdraw": "2007",
+      "fullname": "HOANG TRAN THANH",
+      "account": "2863636",
+      "branch": "HCM"
+    },
+    {
+      "name": "profile2",
+      "user": "tranthanh2",
+      "pass": "abc123",
+      "withdraw": "1111",
+      "fullname": "NGUYEN VAN A",
+      "account": "9704361234567890",
+      "branch": "HN"
+    }
+  ],
+  "sites": [
+    { "name": "MMOO", "reg": "https://m.mmoo.team/", "bank": "https://m.mmoo.team/Financial?type=" },
+    { "name": "TT88", "reg": "https://m.1tt88.vip/", "bank": "https://m.1tt88.vip/Financial" },
+    { "name": "789P", "reg": "https://m.789p1.vip/", "bank": "https://m.789p1.vip/Financial" },
+    { "name": "GO99", "reg": "https://m.1go99.vip/", "bank": "https://m.1go99.vip/Financial" },
+    { "name": "NOHU", "reg": "https://m.8nohu.vip/", "bank": "https://m.8nohu.vip/Financial" }
+  ]
 }
