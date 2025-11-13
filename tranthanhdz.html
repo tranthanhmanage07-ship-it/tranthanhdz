@@ -3,24 +3,179 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trần Thành DZ Tool</title>
+  <title>🛠️ Trần Thành Dz Tool Bào</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #0e0e10;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff4081;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .form-container {
+      background: #1b1b1f;
+      border-radius: 16px;
+      padding: 20px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border: none;
+      border-radius: 8px;
+      background: #2a2a30;
+      color: #fff;
+    }
+    button {
+      width: 48%;
+      margin: 6px 1%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .save { background: #ff4081; color: white; }
+    .save:hover { background: #ff5c93; }
+    .add { background: #444; color: #fff; }
+    .open { background: #00b06b; color: #fff; width: 100%; margin-top: 8px; }
+    .open:hover { background: #00d37f; }
+    .delete { background: #ff8b00; color: #fff; }
+    .deleteall { background: #c70039; color: white; width: 100%; margin-top: 8px; }
+    .list {
+      margin-top: 10px;
+      padding: 10px;
+      background: #1f1f24;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 14px;
+    }
+  </style>
 </head>
-<body style="font-family: Arial; text-align:center; padding-top:50px;">
-  <h1>🚀 Trần Thành DZ Tool</h1>
-  <p>Nhấn vào nút dưới để tự động mở và điền dữ liệu</p>
+<body>
+  <h1>🛠️ Trần Thành Dz Tool Bào</h1>
 
-  <button 
-    style="font-size:18px; padding:10px 20px; border:none; border-radius:10px; background-color:#4CAF50; color:white;"
-    onclick="autoFill()">
-    ▶️ Bắt đầu Tự động điền
-  </button>
+  <div class="form-container">
+    <input id="username" placeholder="Tên tài khoản">
+    <input id="password" type="password" placeholder="Mật khẩu">
+    <input id="withdraw" type="password" placeholder="Mật khẩu rút tiền">
+    <input id="fullname" placeholder="Họ và tên">
+    <input id="bank" placeholder="Số tài khoản">
+    <input id="branch" placeholder="Chi nhánh / Thành phố">
+
+    <div>
+      <button class="save" onclick="saveProfile()">💾 Lưu dữ liệu tự động điền</button>
+      <button class="add" onclick="addProfile()">➕ Lưu profile</button>
+    </div>
+    <div>
+      <button class="open" onclick="openPages()">🌐 Mở 5 trang đăng ký</button>
+      <button class="delete" onclick="deleteCurrent()">🧹 Xóa dữ liệu hiện tại</button>
+    </div>
+    <div>
+      <button class="deleteall" onclick="clearAll()">🗑️ Xóa tất cả profile</button>
+      <button class="add" onclick="loadProfiles()">🔄 Tải lại danh sách</button>
+    </div>
+    
+    <div class="list" id="profilesList">Chưa có profile nào.</div>
+  </div>
 
   <script>
-    function autoFill() {
-      alert('Đang kích hoạt script autofill...');
-      // Thay link này bằng link file autofill.user.js trong repo của bạn
-      window.location.href = 'https://tranthanhmanage.github.io/tranthanhdz/autofill.user.js';
+    const profilesKey = "dz_profiles";
+    let profiles = JSON.parse(localStorage.getItem(profilesKey)) || [];
+
+    function refreshList() {
+      const list = document.getElementById("profilesList");
+      if (profiles.length === 0) {
+        list.innerHTML = "Chưa có profile nào.";
+      } else {
+        list.innerHTML = profiles.map((p, i) => `
+          <div style="margin:5px 0; padding:6px; background:#2a2a30; border-radius:6px;">
+            <b>${p.username}</b> 
+            <button onclick="setProfile(${i})">Sử dụng</button>
+            <button onclick="deleteProfile(${i})">Xóa</button>
+          </div>
+        `).join("");
+      }
     }
+
+    function addProfile() {
+      const profile = {
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        withdraw: document.getElementById("withdraw").value,
+        fullname: document.getElementById("fullname").value,
+        bank: document.getElementById("bank").value,
+        branch: document.getElementById("branch").value,
+      };
+      if (!profile.username) return alert("⚠️ Nhập tên tài khoản trước khi lưu!");
+      profiles.push(profile);
+      localStorage.setItem(profilesKey, JSON.stringify(profiles));
+      refreshList();
+      alert("✅ Đã lưu profile!");
+    }
+
+    function saveProfile() {
+      alert("💾 Dữ liệu tự động điền đã được lưu!");
+    }
+
+    function setProfile(i) {
+      const p = profiles[i];
+      document.getElementById("username").value = p.username;
+      document.getElementById("password").value = p.password;
+      document.getElementById("withdraw").value = p.withdraw;
+      document.getElementById("fullname").value = p.fullname;
+      document.getElementById("bank").value = p.bank;
+      document.getElementById("branch").value = p.branch;
+      alert(`✅ Đã chọn profile: ${p.username}`);
+    }
+
+    function deleteProfile(i) {
+      profiles.splice(i, 1);
+      localStorage.setItem(profilesKey, JSON.stringify(profiles));
+      refreshList();
+    }
+
+    function deleteCurrent() {
+      ["username","password","withdraw","fullname","bank","branch"].forEach(id => {
+        document.getElementById(id).value = "";
+      });
+      alert("🧹 Đã xóa dữ liệu hiện tại!");
+    }
+
+    function clearAll() {
+      if (confirm("Bạn có chắc muốn xóa tất cả profile không?")) {
+        profiles = [];
+        localStorage.removeItem(profilesKey);
+        refreshList();
+      }
+    }
+
+    function loadProfiles() {
+      profiles = JSON.parse(localStorage.getItem(profilesKey)) || [];
+      refreshList();
+      alert("🔄 Đã tải lại danh sách profile!");
+    }
+
+    function openPages() {
+      alert("🌐 Đang mở 5 trang đăng ký...");
+      for (let i = 0; i < 5; i++) {
+        window.open("https://example.com/dangky" + (i + 1), "_blank");
+      }
+    }
+
+    refreshList();
   </script>
 </body>
-</html>
+      </html>
