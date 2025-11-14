@@ -1,17 +1,166 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đang mở Trần Thành DZ Tool...</title>
-  <meta http-equiv="refresh" content="0; url=tranthanhdz.html">
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;text-align:center;padding-top:60px}
-    a{color:#2563eb}
-  </style>
+<meta charset="UTF-8">
+<title>TranThanh AutoFill v4.2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 480px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px #0002;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    input {
+        width: 100%;
+        padding: 13px;
+        margin: 8px 0;
+        font-size: 16px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+    }
+
+    .pink-btn {
+        flex: 1;
+        background: #ff4b7a;
+        color: white;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+
+    .blue-btn {
+        flex: 1;
+        background: #00c2ff;
+        color: white;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+
+    .status-box {
+        margin-top: 15px;
+        padding: 12px;
+        background: #222;
+        color: #76ff8b;
+        border-radius: 8px;
+        font-size: 15px;
+        text-align: center;
+    }
+</style>
 </head>
 <body>
-  <h2>⏳ Đang mở Trần Thành DZ Tool...</h2>
-  <p>Nếu không tự động chuyển, <a href="tranthanhdz.html">bấm vào đây</a>.</p>
+
+<div class="container">
+    <h2>TranThanh AutoFill v4.2</h2>
+    <p style="text-align:center">Điền 1 lần — tự động cho 5 trang</p>
+
+    <input id="username" placeholder="Tên tài khoản">
+    <input id="password" placeholder="Mật khẩu">
+    <input id="confirmPass" placeholder="Xác nhận mật khẩu">
+    <input id="withdrawPass" placeholder="Mật khẩu rút tiền">
+    <input id="fullname" placeholder="Họ và tên thật">
+    <input id="bankNumber" placeholder="Số tài khoản ngân hàng">
+
+    <!-- Chỉ còn 2 nút như bạn yêu cầu -->
+    <div class="button-group">
+        <button id="saveDataBtn" class="pink-btn">💾 Lưu dữ liệu</button>
+        <button id="openTabsBtn" class="blue-btn">🌐 Mở 5 trang</button>
+    </div>
+
+    <div id="statusBox" class="status-box">
+        Đã lưu dữ liệu — sẵn sàng điền tự động
+    </div>
+</div>
+
+<script>
+    // 5 trang cần mở
+    const urls = [
+        "https://tt88.com/register",
+        "https://go99.com/register",
+        "https://sin88.com/register",
+        "https://789bet.com/register",
+        "https://rich88.com/register"
+    ];
+
+    // Lưu dữ liệu
+    function saveData() {
+        const data = {
+            user: document.getElementById("username").value,
+            pass: document.getElementById("password").value,
+            confirm: document.getElementById("confirmPass").value,
+            withdraw: document.getElementById("withdrawPass").value,
+            fullname: document.getElementById("fullname").value,
+            bank: document.getElementById("bankNumber").value
+        };
+
+        localStorage.setItem("autoFillData", JSON.stringify(data));
+        document.getElementById("statusBox").innerText = "Đã lưu dữ liệu — sẵn sàng điền tự động";
+    }
+
+    // Mở 5 tab
+    function open5tabs() {
+        urls.forEach(link => window.open(link, "_blank"));
+    }
+
+    // Tự động điền nếu trang này là trang đăng ký
+    function autoFill() {
+        try {
+            const data = JSON.parse(localStorage.getItem("autoFillData"));
+            if (!data) return;
+
+            // Mapping theo input trang ngoài (bạn đã chụp)
+            const mapping = {
+                username: ["username", "user", "account"],
+                password: ["password", "pass"],
+                confirmPass: ["confirm", "confirm_password", "repass"],
+                withdrawPass: ["withdraw", "withdraw_pass", "pin"],
+                fullname: ["fullname", "name", "realname"],
+                bankNumber: ["bank", "bank_number", "stk"]
+            };
+
+            const inputs = document.querySelectorAll("input");
+
+            inputs.forEach(input => {
+                const name = input.name?.toLowerCase() || "";
+                const id = input.id?.toLowerCase() || "";
+                const placeholder = input.placeholder?.toLowerCase() || "";
+
+                for (const key in mapping) {
+                    if (mapping[key].some(k => name.includes(k) || id.includes(k) || placeholder.includes(k))) {
+                        input.value = data[key];
+                    }
+                }
+            });
+
+        } catch (e) {}
+    }
+
+    autoFill();
+</script>
+
 </body>
 </html>
