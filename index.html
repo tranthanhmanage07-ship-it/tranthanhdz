@@ -3,65 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trần Thành DZ Tool</title>
+    <title>Tool Reg GO99</title>
 
     <style>
         body {
-            background: #0d0d0d;
-            color: #ff4ec7;
             font-family: Arial, sans-serif;
-            text-align: center;
             padding: 20px;
+            background: #121212;
+            color: #f1f1f1;
         }
-
-        h2 {
-            color: #ff73d9;
-            margin-bottom: 25px;
+        h2, h3 {
+            color: #ff4fa3;
         }
-
-        button {
+        a {
+            color: #ff71c6;
+        }
+        .btn {
+            display: block;
             width: 100%;
-            padding: 14px;
-            margin: 12px 0;
+            padding: 12px;
+            margin-top: 12px;
+            background: #ff4fa3;
             border: none;
             border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            background: #ff4ec7;
             color: white;
+            font-size: 17px;
+            font-weight: bold;
             cursor: pointer;
         }
-
-        button:hover {
-            opacity: 0.85;
+        .btn:hover {
+            background: #ff2d91;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0;
+            border-radius: 6px;
+            background: #1e1e1e;
+            border: 1px solid #444;
+            color: #fff;
         }
     </style>
 </head>
-
 <body>
-    <h2>🌸 Trần Thành DZ Tool 🌸</h2>
 
-    <button onclick="location.href='tranthanhdz.html'">
-        💾 Nhập & Lưu Dữ Liệu
-    </button>
+    <h2>📌 Tool GO99</h2>
 
-    <button onclick="open5()">
-        🌐 Mở 5 Trang
-    </button>
-
-    <script>
-        const links = [
-            "https://go99.life/",
-            "https://go99vn.com/",
-            "https://go99.win/",
-            "https://go99asia.com/",
-            "https://go99club.net/"
-        ];
-
-        function open5() {
-            links.forEach(url => window.open(url, "_blank"));
-        }
-    </script>
+    <a href="tranthanhdz.html">
+        <button class="btn">🔧 Trang nhập & lưu dữ liệu</button>
+    </a>
 
 </body>
 </html>
