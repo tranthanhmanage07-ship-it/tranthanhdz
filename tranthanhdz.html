@@ -1,42 +1,31 @@
-<!DOCTYPE html>
-<html lang="vi">
+<!DOCTYPE html><html lang="vi">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Trần Thành DZ Tool – Auto Fill</title>
-
+<title>Trần Thành DZ – AutoFill</title>
 <style>
     body {
-        background: #000;
-        font-family: Arial, sans-serif;
-        padding: 20px;
+        background: #111;
         color: white;
+        font-family: Arial;
+        padding: 20px;
     }
-
     h2 {
-        font-size: 26px;
-        font-weight: bold;
-        margin-bottom: 15px;
         color: #ff2d75;
+        font-size: 26px;
+        margin-bottom: 15px;
     }
-
-    label {
-        font-size: 15px;
-        margin-top: 10px;
-        display: block;
-    }
-
+    label { margin-top: 10px; display: block; }
     input {
         width: 100%;
         padding: 12px;
-        margin-top: 5px;
+        margin-top: 4px;
         border-radius: 8px;
         border: none;
         background: #222;
         color: white;
         font-size: 16px;
     }
-
     .btn {
         width: 100%;
         padding: 14px;
@@ -47,45 +36,20 @@
         margin-top: 12px;
         cursor: pointer;
     }
-
-    .pink {
-        background: #ff2d75;
-        color: white;
-    }
-
-    .cyan {
-        background: #14d2ff;
-        color: black;
-    }
-
-    .footer-box {
-        margin-top: 40px;
-        padding: 20px;
-        background: #111;
-        border-radius: 15px;
-    }
+    .pink { background: #ff2d75; color: white; }
+    .cyan { background: #14d2ff; color: black; }
 </style>
 </head>
-
 <body>
+<h2>🔥 Trần Thành DZ – Auto Fill</h2><label>Tài khoản</label> <input id="username" type="text" />
 
-<h2>🔥 Trần Thành DZ Tool – Auto Fill</h2>
+<label>Mật khẩu đăng nhập</label> <input id="password" type="password" />
 
-<label>Tài khoản</label>
-<input id="username" type="text" />
+<label>Số điện thoại</label> <input id="phone" type="text" />
 
-<label>Mật khẩu đăng nhập</label>
-<input id="password" type="password" />
+<label>Mật khẩu rút tiền</label> <input id="withdraw" type="password" />
 
-<label>Số điện thoại</label>
-<input id="phone" type="text" />
-
-<label>Mật khẩu rút tiền</label>
-<input id="withdraw" type="password" />
-
-<!-- NÚT DƯỚI ĐƯỢC ĐƯA LÊN – HAI NÚT TRÊN ĐÃ XOÁ HOÀN TOÀN -->
-<button id="saveBtn" class="btn pink">💾 Lưu dữ liệu</button>
-<button id="openBtn" class="btn cyan">🌐 Mở 5 trang</button>
+<button id="saveBtn" class="btn pink">💾 Lưu dữ liệu</button> <button id="openBtn" class="btn cyan">🌐 Mở 5 trang</button>
 
 <script>
     const links = [
@@ -104,7 +68,7 @@
             withdraw: document.getElementById("withdraw").value
         };
 
-        localStorage.setItem("regData", JSON.stringify(data));
+        localStorage.setItem("dzData", JSON.stringify(data));
         alert("Đã lưu dữ liệu!");
     };
 
@@ -112,9 +76,8 @@
         links.forEach(url => window.open(url, "_blank"));
     };
 
-    // Auto fill
     window.onload = () => {
-        const saved = localStorage.getItem("regData");
+        const saved = localStorage.getItem("dzData");
         if (saved) {
             const data = JSON.parse(saved);
             document.getElementById("username").value = data.username || "";
@@ -123,7 +86,5 @@
             document.getElementById("withdraw").value = data.withdraw || "";
         }
     };
-</script>
-
-</body>
+</script></body>
 </html>
