@@ -1,97 +1,129 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tool Lưu & Mở 5 Trang</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trần Thành DZ Tool – Auto Fill</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 6px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        #saveBtn {
-            background: #0a84ff;
-            color: white;
-        }
-        #openBtn {
-            background: #34c759;
-            color: white;
-        }
-    </style>
+<style>
+    body {
+        background: #000;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        color: white;
+    }
+
+    h2 {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #ff2d75;
+    }
+
+    label {
+        font-size: 15px;
+        margin-top: 10px;
+        display: block;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: none;
+        background: #222;
+        color: white;
+        font-size: 16px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        border: none;
+        font-size: 17px;
+        font-weight: bold;
+        margin-top: 12px;
+        cursor: pointer;
+    }
+
+    .pink {
+        background: #ff2d75;
+        color: white;
+    }
+
+    .cyan {
+        background: #14d2ff;
+        color: black;
+    }
+
+    .footer-box {
+        margin-top: 40px;
+        padding: 20px;
+        background: #111;
+        border-radius: 15px;
+    }
+</style>
 </head>
 
 <body>
-    <h2>Nhập dữ liệu đăng ký</h2>
 
-    <label>Tài khoản</label>
-    <input id="username" type="text">
+<h2>🔥 Trần Thành DZ Tool – Auto Fill</h2>
 
-    <label>Mật khẩu đăng nhập</label>
-    <input id="password" type="password">
+<label>Tài khoản</label>
+<input id="username" type="text" />
 
-    <label>Số điện thoại</label>
-    <input id="phone" type="text">
+<label>Mật khẩu đăng nhập</label>
+<input id="password" type="password" />
 
-    <label>Mật khẩu rút tiền</label>
-    <input id="withdraw" type="password">
+<label>Số điện thoại</label>
+<input id="phone" type="text" />
 
-    <button id="saveBtn">💾 Lưu dữ liệu</button>
-    <button id="openBtn">🌐 Mở 5 trang</button>
+<label>Mật khẩu rút tiền</label>
+<input id="withdraw" type="password" />
 
-    <script>
-        const links = [
-            "https://go99.life/",
-            "https://go99vn.com/",
-            "https://go99.win/",
-            "https://go99asia.com/",
-            "https://go99club.net/"
-        ];
+<!-- NÚT DƯỚI ĐƯỢC ĐƯA LÊN – HAI NÚT TRÊN ĐÃ XOÁ HOÀN TOÀN -->
+<button id="saveBtn" class="btn pink">💾 Lưu dữ liệu</button>
+<button id="openBtn" class="btn cyan">🌐 Mở 5 trang</button>
 
-        document.getElementById("saveBtn").onclick = () => {
-            const data = {
-                username: document.getElementById("username").value,
-                password: document.getElementById("password").value,
-                phone: document.getElementById("phone").value,
-                withdraw: document.getElementById("withdraw").value
-            };
+<script>
+    const links = [
+        "https://go99.life/",
+        "https://go99vn.com/",
+        "https://go99.win/",
+        "https://go99asia.com/",
+        "https://go99club.net/"
+    ];
 
-            localStorage.setItem("regData", JSON.stringify(data));
-            alert("Đã lưu dữ liệu!");
+    document.getElementById("saveBtn").onclick = () => {
+        const data = {
+            username: document.getElementById("username").value,
+            password: document.getElementById("password").value,
+            phone: document.getElementById("phone").value,
+            withdraw: document.getElementById("withdraw").value
         };
 
-        document.getElementById("openBtn").onclick = () => {
-            links.forEach(url => window.open(url, "_blank"));
-        };
+        localStorage.setItem("regData", JSON.stringify(data));
+        alert("Đã lưu dữ liệu!");
+    };
 
-        // Auto fill khi mở lại trang
-        window.onload = () => {
-            const saved = localStorage.getItem("regData");
-            if (saved) {
-                const data = JSON.parse(saved);
-                document.getElementById("username").value = data.username || "";
-                document.getElementById("password").value = data.password || "";
-                document.getElementById("phone").value = data.phone || "";
-                document.getElementById("withdraw").value = data.withdraw || "";
-            }
+    document.getElementById("openBtn").onclick = () => {
+        links.forEach(url => window.open(url, "_blank"));
+    };
+
+    // Auto fill
+    window.onload = () => {
+        const saved = localStorage.getItem("regData");
+        if (saved) {
+            const data = JSON.parse(saved);
+            document.getElementById("username").value = data.username || "";
+            document.getElementById("password").value = data.password || "";
+            document.getElementById("phone").value = data.phone || "";
+            document.getElementById("withdraw").value = data.withdraw || "";
         }
-    </script>
+    };
+</script>
+
 </body>
 </html>
