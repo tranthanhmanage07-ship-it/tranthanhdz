@@ -1,34 +1,60 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trần Thành DZ – Index</title>
-
+<meta charset="UTF-8">
+<title>Trung tâm quản lý thông tin</title>
 <style>
-body {
-    font-family: Arial;
-    background: #000;
-    color: white;
-    padding: 30px;
-}
-button {
-    padding: 15px;
-    width: 100%;
-    background: #ff0066;
-    border: none;
-    color: white;
-    font-size: 20px;
-    border-radius: 12px;
-}
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input { width: 280px; padding: 8px; margin: 6px 0; }
+    button { padding: 10px 20px; margin-top: 10px; }
 </style>
 </head>
-
 <body>
 
-<h1>🔥 Trần Thành DZ Tool</h1>
+<h2>Nhập thông tin để tự động điền vào 5 trang</h2>
 
-<button onclick="location.href='tranthanhdz.html'">🔧 Mở Tool</button>
+<label>Tài khoản:</label><br>
+<input id="account"><br>
+
+<label>Mật khẩu:</label><br>
+<input id="password" type="password"><br>
+
+<label>Nhập lại mật khẩu:</label><br>
+<input id="confirmPassword" type="password"><br>
+
+<label>Mật khẩu rút tiền:</label><br>
+<input id="moneyPassword" type="password"><br>
+
+<label>Họ tên:</label><br>
+<input id="name"><br>
+
+<button onclick="saveData()">Lưu thông tin</button>
+<button onclick="openAll()">Mở 5 trang</button>
+
+<script>
+function saveData(){
+    const data = {
+        account: document.getElementById("account").value,
+        password: document.getElementById("password").value,
+        confirmPassword: document.getElementById("confirmPassword").value,
+        moneyPassword: document.getElementById("moneyPassword").value,
+        name: document.getElementById("name").value
+    };
+    localStorage.setItem("tt_data", JSON.stringify(data));
+    alert("Đã lưu thông tin!");
+}
+
+function openAll(){
+    const urls = [
+        "https://m.mmoo.team/Account/Register",
+        "https://m.1tt88.vip/Account/Register",
+        "https://m.789p1.vip/Account/Register",
+        "https://m.1go99.vip/Account/Register",
+        "https://m.8nohu.vip/Account/Register"
+    ];
+    urls.forEach(u => window.open(u, "_blank"));
+}
+</script>
 
 </body>
 </html>
