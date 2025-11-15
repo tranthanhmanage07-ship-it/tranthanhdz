@@ -1,90 +1,40 @@
-<!DOCTYPE html><html lang="vi">
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Trần Thành DZ – AutoFill</title>
-<style>
-    body {
-        background: #111;
-        color: white;
-        font-family: Arial;
-        padding: 20px;
-    }
-    h2 {
-        color: #ff2d75;
-        font-size: 26px;
-        margin-bottom: 15px;
-    }
-    label { margin-top: 10px; display: block; }
-    input {
-        width: 100%;
-        padding: 12px;
-        margin-top: 4px;
-        border-radius: 8px;
-        border: none;
-        background: #222;
-        color: white;
-        font-size: 16px;
-    }
-    .btn {
-        width: 100%;
-        padding: 14px;
-        border-radius: 10px;
-        border: none;
-        font-size: 17px;
-        font-weight: bold;
-        margin-top: 12px;
-        cursor: pointer;
-    }
-    .pink { background: #ff2d75; color: white; }
-    .cyan { background: #14d2ff; color: black; }
-</style>
+<meta charset="UTF-8">
+<title>Lưu thông tin</title>
 </head>
 <body>
-<h2>🔥 Trần Thành DZ – Auto Fill</h2><label>Tài khoản</label> <input id="username" type="text" />
 
-<label>Mật khẩu đăng nhập</label> <input id="password" type="password" />
+<h3>Lưu thông tin đăng ký</h3>
 
-<label>Số điện thoại</label> <input id="phone" type="text" />
+<label>Account:</label>
+<input id="acc"><br><br>
 
-<label>Mật khẩu rút tiền</label> <input id="withdraw" type="password" />
+<label>Password:</label>
+<input id="pass" type="password"><br><br>
 
-<button id="saveBtn" class="btn pink">💾 Lưu dữ liệu</button> <button id="openBtn" class="btn cyan">🌐 Mở 5 trang</button>
+<label>Confirm Password:</label>
+<input id="cpass" type="password"><br><br>
+
+<label>Money Password:</label>
+<input id="mpass" type="password"><br><br>
+
+<label>Name:</label>
+<input id="name"><br><br>
+
+<button onclick="saveData()">LƯU</button>
 
 <script>
-    const links = [
-        "https://go99.life/",
-        "https://go99vn.com/",
-        "https://go99.win/",
-        "https://go99asia.com/",
-        "https://go99club.net/"
-    ];
+function saveData() {
+    localStorage.setItem("saved_account", document.getElementById("acc").value);
+    localStorage.setItem("saved_password", document.getElementById("pass").value);
+    localStorage.setItem("saved_confirmPassword", document.getElementById("cpass").value);
+    localStorage.setItem("saved_moneyPassword", document.getElementById("mpass").value);
+    localStorage.setItem("saved_name", document.getElementById("name").value);
+    alert("Đã lưu xong!");
+}
+</script>
 
-    document.getElementById("saveBtn").onclick = () => {
-        const data = {
-            username: document.getElementById("username").value,
-            password: document.getElementById("password").value,
-            phone: document.getElementById("phone").value,
-            withdraw: document.getElementById("withdraw").value
-        };
-
-        localStorage.setItem("dzData", JSON.stringify(data));
-        alert("Đã lưu dữ liệu!");
-    };
-
-    document.getElementById("openBtn").onclick = () => {
-        links.forEach(url => window.open(url, "_blank"));
-    };
-
-    window.onload = () => {
-        const saved = localStorage.getItem("dzData");
-        if (saved) {
-            const data = JSON.parse(saved);
-            document.getElementById("username").value = data.username || "";
-            document.getElementById("password").value = data.password || "";
-            document.getElementById("phone").value = data.phone || "";
-            document.getElementById("withdraw").value = data.withdraw || "";
-        }
-    };
-</script></body>
+</body>
 </html>
