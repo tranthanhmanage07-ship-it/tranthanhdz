@@ -3,65 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Auto Register Control Panel</title>
+<title>Auto Register – Trang chủ</title>
+
 <style>
     body {
         font-family: Arial, sans-serif;
-        padding: 20px;
-        background: #f2f2f2;
-    }
-    .box {
-        background: white;
+        background: #121212;
+        color: #fff;
         padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
     }
+
+    h2 {
+        text-align: center;
+        color: #00eaff;
+        margin-bottom: 10px;
+    }
+
+    .box {
+        background: #1e1e1e;
+        padding: 15px;
+        border-radius: 12px;
+    }
+
     input {
         width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        margin-bottom: 15px;
-        border-radius: 6px;
-        border: 1px solid #aaa;
+        padding: 12px;
+        margin: 7px 0;
+        border-radius: 8px;
+        border: none;
+        background: #2c2c2c;
+        color: white;
+        font-size: 15px;
     }
+
     button {
         width: 100%;
         padding: 12px;
-        font-size: 16px;
+        margin-top: 10px;
+        font-size: 15px;
+        font-weight: bold;
         border: none;
-        border-radius: 6px;
-        background: #007bff;
-        color: white;
-        margin-bottom: 10px;
+        border-radius: 10px;
+        background: #00eaff;
+        color: #000;
+    }
+
+    .site-buttons button {
+        margin-top: 12px;
+        background: #ffaa00;
+        color: black;
+    }
+
+    .saved-box {
+        margin-top: 20px;
+        background: #1e1e1e;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 13px;
+        white-space: pre-wrap;
     }
 </style>
 </head>
 
 <body>
 
-<h2>Auto Register – Control Panel</h2>
-<p>Nhập thông tin → Bấm mở trang → Tampermonkey sẽ tự điền</p>
+<h2>Auto Register</h2>
 
 <div class="box">
     <label>Tài khoản</label>
-    <input id="acc">
+    <input id="acc" placeholder="VD: thanh123">
 
     <label>Mật khẩu</label>
-    <input id="pass">
+    <input id="pass" placeholder="VD: 123456">
 
     <label>Nhập lại mật khẩu</label>
-    <input id="pass2">
+    <input id="cpass" placeholder="VD: 123456">
 
     <label>Mật khẩu rút tiền</label>
-    <input id="mpass">
+    <input id="mpass" placeholder="VD: 8888">
 
     <label>Họ tên</label>
-    <input id="name">
+    <input id="fname" placeholder="VD: Thanh">
+
+    <button onclick="saveData()">💾 Lưu dữ liệu</button>
 </div>
 
-<div class="box">
-    <button onclick="openSite('https://m.mmoo.team/Account/Register')">MMO</button>
+<div class="saved-box">
+    <b>Dữ liệu đang lưu:</b>
+    <pre id="saved"></pre>
+</div>
+
+<h3 style="margin-top:20px;">Mở nhanh 5 trang đăng ký:</h3>
+
+<div class="site-buttons">
+    <button onclick="openSite('https://m.mmoo.team/Account/Register')">MMOO</button>
     <button onclick="openSite('https://m.1tt88.vip/Account/Register')">TT88</button>
     <button onclick="openSite('https://m.789p1.vip/Account/Register')">789P</button>
     <button onclick="openSite('https://m.1go99.vip/Account/Register')">GO99</button>
@@ -69,18 +104,30 @@
 </div>
 
 <script>
-function openSite(url) {
+function saveData() {
     const data = {
         account: document.getElementById("acc").value,
         password: document.getElementById("pass").value,
-        confirmPassword: document.getElementById("pass2").value,
+        confirmPassword: document.getElementById("cpass").value,
         moneyPassword: document.getElementById("mpass").value,
-        name: document.getElementById("name").value
+        name: document.getElementById("fname").value,
     };
 
     localStorage.setItem("autofillData", JSON.stringify(data));
+    alert("✔ ĐÃ LƯU! Giờ bạn mở 5 trang và F5 để tự điền.");
+    showSaved();
+}
+
+function showSaved() {
+    document.getElementById("saved").textContent =
+        JSON.stringify(JSON.parse(localStorage.getItem("autofillData") || "{}"), null, 2);
+}
+
+function openSite(url) {
     window.open(url, "_blank");
 }
+
+showSaved();
 </script>
 
 </body>
