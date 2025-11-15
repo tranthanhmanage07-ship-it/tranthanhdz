@@ -6,70 +6,13 @@
 <title>Auto Register – Trang chủ</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #121212;
-        color: #fff;
-        padding: 15px;
-        max-width: 500px;
-        margin: auto;
-    }
-
-    h2 {
-        text-align: center;
-        color: #00eaff;
-        margin-bottom: 10px;
-    }
-
-    .box {
-        background: #1e1e1e;
-        padding: 15px;
-        border-radius: 12px;
-    }
-
-    label {
-        font-size: 14px;
-        margin-top: 8px;
-        display: block;
-    }
-
-    input {
-        width: 100%;
-        padding: 12px;
-        margin: 5px 0 12px 0;
-        border-radius: 8px;
-        border: none;
-        background: #2c2c2c;
-        color: white;
-        font-size: 15px;
-    }
-
-    button {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        font-size: 15px;
-        font-weight: bold;
-        border: none;
-        border-radius: 10px;
-        background: #00eaff;
-        color: #000;
-    }
-
-    .site-buttons button {
-        margin-top: 12px;
-        background: #ffaa00;
-        color: black;
-    }
-
-    .saved-box {
-        margin-top: 20px;
-        background: #1e1e1e;
-        padding: 12px;
-        border-radius: 10px;
-        font-size: 13px;
-        white-space: pre-wrap;
-    }
+    body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 15px; }
+    h2 { text-align: center; color: #00eaff; margin-bottom: 10px; }
+    .box { background: #1e1e1e; padding: 15px; border-radius: 12px; }
+    input { width: 100%; padding: 12px; margin: 7px 0; border-radius: 8px; border: none; background: #2c2c2c; color: white; font-size: 15px; }
+    button { width: 100%; padding: 12px; margin-top: 10px; font-size: 15px; font-weight: bold; border: none; border-radius: 10px; background: #00eaff; color: #000; }
+    .site-buttons button { margin-top: 12px; background: #ffaa00; color: black; }
+    .saved-box { margin-top: 20px; background: #1e1e1e; padding: 12px; border-radius: 10px; font-size: 13px; white-space: pre-wrap; }
 </style>
 </head>
 
@@ -111,6 +54,8 @@
     <button onclick="openSite('https://m.8nohu.vip/Account/Register')">NOHU</button>
 </div>
 
+<button style="background:#4eff7a;margin-top:20px;" onclick="checkScript()">Kiểm tra script</button>
+
 <script>
 function saveData() {
     const data = {
@@ -122,17 +67,31 @@ function saveData() {
     };
 
     localStorage.setItem("autofillData", JSON.stringify(data));
-    alert("✔ ĐÃ LƯU! Giờ bạn mở 5 trang và F5 để tự điền.");
+    alert("✔ ĐÃ LƯU! Mở trang → F5 → sẽ tự điền.");
     showSaved();
 }
 
 function showSaved() {
-    const saved = JSON.parse(localStorage.getItem("autofillData") || "{}");
-    document.getElementById("saved").textContent = JSON.stringify(saved, null, 2);
+    document.getElementById("saved").textContent =
+        JSON.stringify(JSON.parse(localStorage.getItem("autofillData") || "{}"), null, 2);
 }
 
+// mở trang kiểu user action → Tampermonkey luôn chạy
 function openSite(url) {
-    window.open(url, "_blank");
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+// kiểm tra xem autofillData có tồn tại không
+function checkScript() {
+    const d = localStorage.getItem("autofillData");
+    if (d) alert("✅ Dữ liệu OK – script sẽ tự điền khi bạn F5 trang đăng ký.");
+    else alert("❌ Chưa có dữ liệu! Hãy nhập và bấm Lưu.");
 }
 
 showSaved();
