@@ -1,7 +1,7 @@
 {
-  "account": "abc123",
-  "password": "123456",
-  "confirmPassword": "123456",
+  "account": "tenmoi",
+  "password": "matkhau",
+  "confirmPassword": "matkhau",
   "moneyPassword": "8888",
-  "name": "Thanh"
+  "name": "Tên mới"
 }
