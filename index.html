@@ -1,119 +1,87 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoFill Manager</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        textarea {
-            width: 100%;
-            height: 180px;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #aaa;
-            font-size: 16px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 15px;
-            background: #007bff;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 18px;
-        }
-
-        button:hover {
-            background: #005fcc;
-        }
-
-        .small-btn {
-            margin-top: 10px;
-            background: #28a745;
-        }
-        .link-btn {
-            display: block;
-            background: #ff9800;
-            margin-top: 12px;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            color: white;
-            font-size: 18px;
-            text-decoration: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Register Control Panel</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f2f2f2;
+    }
+    .box {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: 1px solid #aaa;
+    }
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        background: #007bff;
+        color: white;
+        margin-bottom: 10px;
+    }
+</style>
 </head>
+
 <body>
 
-    <h2>AutoFill – Quản lý dữ liệu</h2>
+<h2>Auto Register – Control Panel</h2>
+<p>Nhập thông tin → Bấm mở trang → Tampermonkey sẽ tự điền</p>
 
-    <div class="container">
-        <h3>Nhập dữ liệu JSON để tạo account</h3>
+<div class="box">
+    <label>Tài khoản</label>
+    <input id="acc">
 
-        <textarea id="jsonInput">
-{
-  "account": "abc123",
-  "password": "123456",
-  "confirmPassword": "123456",
-  "moneyPassword": "8888",
-  "name": "Thanh"
-}
-        </textarea>
+    <label>Mật khẩu</label>
+    <input id="pass">
 
-        <button onclick="saveJson()">Lưu dữ liệu</button>
-        <button class="small-btn" onclick="loadJson()">Tải dữ liệu hiện tại</button>
+    <label>Nhập lại mật khẩu</label>
+    <input id="pass2">
 
-        <h3>Mở 5 trang tự động</h3>
+    <label>Mật khẩu rút tiền</label>
+    <input id="mpass">
 
-        <a class="link-btn" href="https://dangky1.com" target="_blank">Trang 1</a>
-        <a class="link-btn" href="https://dangky2.com" target="_blank">Trang 2</a>
-        <a class="link-btn" href="https://dangky3.com" target="_blank">Trang 3</a>
-        <a class="link-btn" href="https://dangky4.com" target="_blank">Trang 4</a>
-        <a class="link-btn" href="https://dangky5.com" target="_blank">Trang 5</a>
+    <label>Họ tên</label>
+    <input id="name">
+</div>
 
-    </div>
+<div class="box">
+    <button onclick="openSite('https://m.mmoo.team/Account/Register')">MMO</button>
+    <button onclick="openSite('https://m.1tt88.vip/Account/Register')">TT88</button>
+    <button onclick="openSite('https://m.789p1.vip/Account/Register')">789P</button>
+    <button onclick="openSite('https://m.1go99.vip/Account/Register')">GO99</button>
+    <button onclick="openSite('https://m.8nohu.vip/Account/Register')">NOHU</button>
+</div>
 
 <script>
-function saveJson() {
-    let data = document.getElementById("jsonInput").value;
+function openSite(url) {
+    const data = {
+        account: document.getElementById("acc").value,
+        password: document.getElementById("pass").value,
+        confirmPassword: document.getElementById("pass2").value,
+        moneyPassword: document.getElementById("mpass").value,
+        name: document.getElementById("name").value
+    };
 
-    fetch("data.json", {
-        method: "PUT",
-        body: data
-    });
-
-    alert("Đã lưu JSON! Bạn có thể refresh để xem thay đổi.");
-}
-
-function loadJson() {
-    fetch("data.json")
-    .then(res => res.text())
-    .then(t => document.getElementById("jsonInput").value = t);
+    localStorage.setItem("autofillData", JSON.stringify(data));
+    window.open(url, "_blank");
 }
 </script>
 
 </body>
-</html>
+    </html>
