@@ -1,38 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Lưu thông tin</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trần Thành DZ Tool</title>
+
+<style>
+body {
+    background: #0d0d0d;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+.box {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px #000;
+}
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border: none;
+    border-radius: 8px;
+    background: #333;
+    color: white;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    background: #ff0066;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-top: 8px;
+}
+button:hover {
+    opacity: 0.8;
+}
+h2 { margin-bottom: 10px; }
+</style>
 </head>
+
 <body>
 
-<h3>Lưu thông tin đăng ký</h3>
+<h1>🔥 Trần Thành DZ Tool – Auto Fill</h1>
 
-<label>Account:</label>
-<input id="acc"><br><br>
+<div class="box">
+    <h2>📌 Nhập thông tin</h2>
+    <input id="tt_account" placeholder="Tên tài khoản">
+    <input id="tt_password" placeholder="Mật khẩu đăng nhập">
+    <input id="tt_confirm" placeholder="Xác nhận mật khẩu">
+    <input id="tt_money" placeholder="Mật khẩu rút tiền">
+    <input id="tt_name" placeholder="Họ tên thật">
+</div>
 
-<label>Password:</label>
-<input id="pass" type="password"><br><br>
-
-<label>Confirm Password:</label>
-<input id="cpass" type="password"><br><br>
-
-<label>Money Password:</label>
-<input id="mpass" type="password"><br><br>
-
-<label>Name:</label>
-<input id="name"><br><br>
-
-<button onclick="saveData()">LƯU</button>
+<div class="box">
+    <button onclick="saveData()">💾 Lưu dữ liệu</button>
+    <button onclick="openPages()">🚀 Mở 5 trang</button>
+</div>
 
 <script>
 function saveData() {
-    localStorage.setItem("saved_account", document.getElementById("acc").value);
-    localStorage.setItem("saved_password", document.getElementById("pass").value);
-    localStorage.setItem("saved_confirmPassword", document.getElementById("cpass").value);
-    localStorage.setItem("saved_moneyPassword", document.getElementById("mpass").value);
-    localStorage.setItem("saved_name", document.getElementById("name").value);
-    alert("Đã lưu xong!");
+    const data = {
+        account: document.getElementById("tt_account").value,
+        password: document.getElementById("tt_password").value,
+        confirm: document.getElementById("tt_confirm").value,
+        money: document.getElementById("tt_money").value,
+        name: document.getElementById("tt_name").value
+    };
+    localStorage.setItem("tranthanhdz_data", JSON.stringify(data));
+    alert("✅ Đã lưu dữ liệu!");
+}
+
+function openPages() {
+    const urls = [
+        "https://m.8nohu.vip/Account/Register",
+        "https://m.1go99.vip/Account/Register",
+        "https://m.mmoo.team/Account/Register",
+        "https://m.789p1.vip/Account/Register",
+        "https://m.1tt88.vip/Account/Register"
+    ];
+    urls.forEach(url => window.open(url, "_blank"));
 }
 </script>
 
