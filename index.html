@@ -1,58 +1,117 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Trung tâm quản lý thông tin</title>
-<style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input { width: 280px; padding: 8px; margin: 6px 0; }
-    button { padding: 10px 20px; margin-top: 10px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoFill Manager</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #aaa;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #007bff;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background: #005fcc;
+        }
+
+        .small-btn {
+            margin-top: 10px;
+            background: #28a745;
+        }
+        .link-btn {
+            display: block;
+            background: #ff9800;
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Nhập thông tin để tự động điền vào 5 trang</h2>
+    <h2>AutoFill – Quản lý dữ liệu</h2>
 
-<label>Tài khoản:</label><br>
-<input id="account"><br>
+    <div class="container">
+        <h3>Nhập dữ liệu JSON để tạo account</h3>
 
-<label>Mật khẩu:</label><br>
-<input id="password" type="password"><br>
+        <textarea id="jsonInput">
+{
+  "account": "abc123",
+  "password": "123456",
+  "confirmPassword": "123456",
+  "moneyPassword": "8888",
+  "name": "Thanh"
+}
+        </textarea>
 
-<label>Nhập lại mật khẩu:</label><br>
-<input id="confirmPassword" type="password"><br>
+        <button onclick="saveJson()">Lưu dữ liệu</button>
+        <button class="small-btn" onclick="loadJson()">Tải dữ liệu hiện tại</button>
 
-<label>Mật khẩu rút tiền:</label><br>
-<input id="moneyPassword" type="password"><br>
+        <h3>Mở 5 trang tự động</h3>
 
-<label>Họ tên:</label><br>
-<input id="name"><br>
+        <a class="link-btn" href="https://dangky1.com" target="_blank">Trang 1</a>
+        <a class="link-btn" href="https://dangky2.com" target="_blank">Trang 2</a>
+        <a class="link-btn" href="https://dangky3.com" target="_blank">Trang 3</a>
+        <a class="link-btn" href="https://dangky4.com" target="_blank">Trang 4</a>
+        <a class="link-btn" href="https://dangky5.com" target="_blank">Trang 5</a>
 
-<button onclick="saveData()">Lưu thông tin</button>
-<button onclick="openAll()">Mở 5 trang</button>
+    </div>
 
 <script>
-function saveData(){
-    const data = {
-        account: document.getElementById("account").value,
-        password: document.getElementById("password").value,
-        confirmPassword: document.getElementById("confirmPassword").value,
-        moneyPassword: document.getElementById("moneyPassword").value,
-        name: document.getElementById("name").value
-    };
-    localStorage.setItem("tt_data", JSON.stringify(data));
-    alert("Đã lưu thông tin!");
+function saveJson() {
+    let data = document.getElementById("jsonInput").value;
+
+    fetch("data.json", {
+        method: "PUT",
+        body: data
+    });
+
+    alert("Đã lưu JSON! Bạn có thể refresh để xem thay đổi.");
 }
 
-function openAll(){
-    const urls = [
-        "https://m.mmoo.team/Account/Register",
-        "https://m.1tt88.vip/Account/Register",
-        "https://m.789p1.vip/Account/Register",
-        "https://m.1go99.vip/Account/Register",
-        "https://m.8nohu.vip/Account/Register"
-    ];
-    urls.forEach(u => window.open(u, "_blank"));
+function loadJson() {
+    fetch("data.json")
+    .then(res => res.text())
+    .then(t => document.getElementById("jsonInput").value = t);
 }
 </script>
 
