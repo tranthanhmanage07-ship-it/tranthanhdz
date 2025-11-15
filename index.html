@@ -1,76 +1,34 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Chọn trang cần tự điền</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trần Thành DZ – Index</title>
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        background: #f6f6f6;
-    }
-    h2 { color: #333; }
-    .info-box {
-        background: white;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 0 5px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
-    button {
-        width: 220px;
-        padding: 12px;
-        margin: 8px 10px;
-        font-size: 16px;
-        border-radius: 6px;
-        border: none;
-        cursor: pointer;
-        background: #3498db;
-        color: white;
-        transition: 0.2s;
-    }
-    button:hover {
-        background: #217dbb;
-    }
+body {
+    font-family: Arial;
+    background: #000;
+    color: white;
+    padding: 30px;
+}
+button {
+    padding: 15px;
+    width: 100%;
+    background: #ff0066;
+    border: none;
+    color: white;
+    font-size: 20px;
+    border-radius: 12px;
+}
 </style>
 </head>
+
 <body>
 
-<h2>Auto Fill – Chọn trang cần mở</h2>
+<h1>🔥 Trần Thành DZ Tool</h1>
 
-<div class="info-box">
-    <h3>Thông tin đã lưu:</h3>
-    <p><b>Account:</b> <span id="s_acc"></span></p>
-    <p><b>Password:</b> <span id="s_pass"></span></p>
-    <p><b>Confirm Pass:</b> <span id="s_cpass"></span></p>
-    <p><b>Money Pass:</b> <span id="s_mpass"></span></p>
-    <p><b>Name:</b> <span id="s_name"></span></p>
-</div>
-
-<h3>Chọn trang để tự điền:</h3>
-
-<button onclick="go('https://m.8nohu.vip/Account/Register')">NOHU</button>
-<button onclick="go('https://m.1tt88.vip/Account/Register')">TT88</button>
-<button onclick="go('https://m.1go99.vip/Account/Register')">GO99</button>
-<button onclick="go('https://m.789p1.vip/Account/Register')">789P</button>
-<button onclick="go('https://m.mmoo.team/Account/Register')">MMO</button>
-
-<script>
-function loadSaved() {
-    document.getElementById("s_acc").textContent = localStorage.getItem("saved_account") || "(trống)";
-    document.getElementById("s_pass").textContent = localStorage.getItem("saved_password") || "(trống)";
-    document.getElementById("s_cpass").textContent = localStorage.getItem("saved_confirmPassword") || "(trống)";
-    document.getElementById("s_mpass").textContent = localStorage.getItem("saved_moneyPassword") || "(trống)";
-    document.getElementById("s_name").textContent = localStorage.getItem("saved_name") || "(trống)";
-}
-
-function go(url) {
-    if (!url) return;
-    window.location.href = url;
-}
-
-loadSaved();
-</script>
+<button onclick="location.href='tranthanhdz.html'">🔧 Mở Tool</button>
 
 </body>
 </html>
